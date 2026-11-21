@@ -4,7 +4,7 @@
  */
 
 /** Canonical production URL (no trailing slash). Swap when a custom domain is live. */
-export const SITE_URL = 'https://portfolio-mu-wine-42.vercel.app';
+export const SITE_URL = 'https://nodviking.me';
 
 export const site = {
 	brand: 'nodviking',

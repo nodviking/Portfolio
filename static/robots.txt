@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://portfolio-mu-wine-42.vercel.app/sitemap.xml
+Sitemap: https://nodviking.me/sitemap.xml

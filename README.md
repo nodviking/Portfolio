@@ -1,11 +1,11 @@
 # nodviking — portfolio
 
-Personal portfolio of **nodviking**. Technical / brutalist "Syntax Error" style: `#0E0E0E`, one orange accent
-(`#FF4A00`), JetBrains Mono everywhere, hairline frames with square corner nodes.
+Personal portfolio of **nodviking** — live at **https://nodviking.me**. Technical / brutalist style: `#0E0E0E`, one
+maroon accent, JetBrains Mono everywhere, hairline frames with square corner nodes, ASCII-art canvases.
 
 ## Stack
 
-- **SvelteKit 3 + Svelte 5 runes**, TypeScript, Vite, `@sveltejs/adapter-vercel`. Every page is prerendered.
+- **SvelteKit 3 + Svelte 5 runes**, TypeScript, Vite, `@sveltejs/adapter-static`. Every page is prerendered to static HTML.
 - **Tailwind CSS v4** + design tokens in `src/app.css`.
 - **GSAP** (ScrollTrigger, SplitText, ScrambleText) for all motion, **Lenis** for smooth scroll (synced to GSAP's ticker).
 - **JetBrains Mono Variable**, self-hosted via `@fontsource-variable` and preloaded.
@@ -42,7 +42,11 @@ Search for `TODO:` to find content that still needs real values. Dates marked `T
 - `node scripts/brand-assets.mjs` — regenerates `static/og.png` (1200×630) and the favicons.
 - `node scripts/shots.mjs [url] [outDir]` / `scripts/shots-extra.mjs` — Playwright visual QA screenshots.
 
-## Deploy (Vercel)
+## Deploy (GitHub Pages)
 
-Root directory: the repo root (`./`). Framework preset: **SvelteKit**. Build command `npm run build`, no output
-directory override needed (the adapter handles it).
+Every push to `main` runs `.github/workflows/deploy.yml`: `npm ci` → `npm run check` → `npm run build` → deploy the
+`build/` folder to GitHub Pages. The custom domain comes from `static/CNAME` (`nodviking.me`); `SITE_URL` in
+`src/lib/data/site.ts` must match it.
+
+DNS (Namecheap): four `A` records on `@` → `185.199.108.153`, `185.199.109.153`, `185.199.110.153`,
+`185.199.111.153`, and a `CNAME` on `www` → `nodviking.github.io`.

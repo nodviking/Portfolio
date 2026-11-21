@@ -15,13 +15,13 @@
 	--color-line-strong: #3a3a3a;
 	/*
 	 * One accent: maroon, in three shades (contrast on #0E0E0E):
-	 * - accent         #9B1C31  fills (buttons, boxes, tab labels, bars); white text on it = 8.06:1
-	 * - accent-display #B22A40  large display type only (3.03:1, AA for large text)
-	 * - accent-ink     #D45A6C  small text, thin lines, icons, ASCII art (5.04:1, AA)
+	 * - accent         #6B0F1F  fills (buttons, boxes, tab labels, bars); white text on it = 12.26:1
+	 * - accent-display #AE2E44  large display type only (3.01:1, AA for large text)
+	 * - accent-ink     #CC5B6B  small text, thin lines, icons, ASCII art (4.85:1, AA)
 	 */
-	--color-accent: #9b1c31;
-	--color-accent-display: #b22a40;
-	--color-accent-ink: #d45a6c;
+	--color-accent: #6b0f1f;
+	--color-accent-display: #ae2e44;
+	--color-accent-ink: #cc5b6b;
 	--color-on-accent: #ffffff;
 
 	--font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;

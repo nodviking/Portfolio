@@ -17,18 +17,18 @@ const css = `
 @font-face { font-family: JBM; src: url(data:font/woff2;base64,${fontData}) format('woff2'); font-weight: 100 800; }
 * { margin: 0; box-sizing: border-box; }
 html, body { background: #0e0e0e; color: #ededf0; font-family: JBM, monospace; }
-.box { position: relative; display: inline-block; padding: 0 0.06em 0 0.05em; background: #9b1c31; color: #ffffff; }
-.wm { font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; color: #b22a40; white-space: nowrap; }
+.box { position: relative; display: inline-block; padding: 0 0.06em 0 0.05em; background: #6b0f1f; color: #ffffff; }
+.wm { font-weight: 800; letter-spacing: -0.06em; line-height: 0.9; color: #ae2e44; white-space: nowrap; }
 `;
 
 const og = `<!doctype html><html><head><style>${css}
 body { width: 1200px; height: 630px; padding: 56px 64px; display: flex; flex-direction: column;
   background-image: radial-gradient(circle, rgba(237,237,240,.06) 1.2px, transparent 1.6px); background-size: 28px 28px; }
 .top { display: flex; justify-content: space-between; font-size: 16px; font-weight: 700; letter-spacing: .12em; color: #8a8f98; }
-.top b { color: #d45a6c; }
+.top b { color: #cc5b6b; }
 .tag { align-self: flex-start; margin-top: 40px; border: 1px solid rgba(237,237,240,.22); padding: 8px 14px; font-size: 16px;
   font-weight: 700; letter-spacing: .14em; display: flex; gap: 12px; align-items: center; }
-.tag i { width: 10px; height: 10px; background: #d45a6c; display: block; }
+.tag i { width: 10px; height: 10px; background: #cc5b6b; display: block; }
 .wm { margin-top: auto; font-size: 196px; }
 .rule { height: 1px; background: #2a2a2a; margin-top: 30px; }
 .foot { margin-top: 18px; font-size: 18px; color: #8a8f98; display: flex; justify-content: space-between; }
