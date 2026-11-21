@@ -1,8 +1,5 @@
 /** Hero copy. */
 
-/** Outlined tag at the top of the hero. */
-export const heroTag = 'Developer × Designer · Delhi';
-
 /** The two-part wordmark: first word in solid orange, second in a solid orange box with dark text. */
 export const heroWordmark = { first: 'Nod', boxed: 'Viking' } as const;
 

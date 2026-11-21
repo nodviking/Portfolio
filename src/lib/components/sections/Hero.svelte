@@ -2,7 +2,7 @@
 	import { EASE, gsap } from '#lib/animations/gsap.ts';
 	import { CIPHER, cipherOf, scrambleTo } from '#lib/animations/scramble.ts';
 	import LocalTime from '#lib/components/ui/LocalTime.svelte';
-	import { heroIntro, heroTag, heroWordmark } from '#lib/data/hero.ts';
+	import { heroIntro, heroWordmark } from '#lib/data/hero.ts';
 	import { site } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
@@ -52,12 +52,6 @@
 		const tl = gsap
 			.timeline({ defaults: { ease: EASE.out } })
 			.set(q('[data-intro]'), { visibility: 'visible' })
-			.fromTo(
-				q('[data-tag]'),
-				{ clipPath: 'inset(0% 100% 0% 0%)' },
-				{ clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'power4.out' },
-				0
-			)
 			.to(
 				first,
 				{
@@ -95,7 +89,7 @@
 			first.textContent = heroWordmark.first;
 			boxed.textContent = heroWordmark.boxed;
 			annos.forEach((el) => (el.textContent = el.dataset.text ?? el.textContent));
-			gsap.set(q('[data-tag], [data-rule], [data-line], [data-dim-line], [data-dim-tick]'), {
+			gsap.set(q('[data-rule], [data-line], [data-dim-line], [data-dim-tick]'), {
 				clearProps: 'clipPath,transform'
 			});
 			gsap.set(boxed, { '--box-r': '0%' });
@@ -130,12 +124,6 @@
 	class={['hero', played && 'is-played']}
 	aria-labelledby="hero-title"
 >
-	<div class="flex justify-center">
-		<p class="tag" data-intro data-tag>
-			<span class="tag-mark" aria-hidden="true"></span><span>{heroTag}</span>
-		</p>
-	</div>
-
 	<div bind:this={wrap} class="wm-wrap">
 		<!-- Spec-drawing annotations -->
 		<div class="annos caps" aria-hidden="true">
