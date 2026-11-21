@@ -9,6 +9,9 @@
 			// `nv-anim` marks "JS + motion allowed": hero elements stay hidden until their intro runs.
 			(function () {
 				var d = document.documentElement;
+				try {
+					if (localStorage.getItem('nv-theme') === 'light') d.dataset.theme = 'light';
+				} catch (e) {}
 				var reduced = false;
 				try {
 					reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;

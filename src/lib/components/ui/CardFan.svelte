@@ -85,11 +85,10 @@
 		padding: 7px;
 		border-radius: 18px;
 		overflow: hidden;
-		background: #fbf9f5;
+		background: var(--color-card);
 		border: 1px solid var(--color-line);
 		box-shadow:
-			0 1px 0 rgb(255 255 255 / 0.4) inset,
-			0 18px 40px -18px rgb(20 18 18 / 0.45);
+			0 18px 40px -18px var(--shadow);
 		transform: translateX(calc(-50% + var(--x) * var(--deal)))
 			translateY(calc(var(--y) * var(--deal) + var(--rise) * 45%))
 			rotate(calc((var(--r) + var(--tx) * 1deg * 0.15) * var(--deal)));
@@ -102,7 +101,7 @@
 	.card:focus-visible {
 		z-index: 20 !important;
 		transform: translateX(calc(-50% + var(--x))) translateY(calc(var(--y) - 28px)) rotate(0deg) scale(1.04);
-		box-shadow: 0 28px 60px -20px rgb(107 15 31 / 0.55);
+		box-shadow: 0 28px 60px -20px var(--shadow);
 	}
 	.media {
 		flex: 1;
@@ -136,7 +135,7 @@
 		font-size: 9px;
 		text-transform: uppercase;
 		letter-spacing: 0.06em;
-		color: var(--color-accent);
+		color: var(--color-accent-ink);
 		overflow: hidden;
 		text-overflow: ellipsis;
 	}

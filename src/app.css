@@ -7,21 +7,23 @@
 
 /* ---------- Design tokens (exposed as CSS vars + Tailwind utilities) ---------- */
 @theme {
-	/* Light theme. Names are semantic: `ink` = page background, `paper` = primary text. */
-	--color-ink: #f2eee7;
-	--color-panel: #ebe6dd;
-	--color-paper: #141212;
-	--color-mute: #5f5953;
-	--color-line: #d6d0c6;
-	--color-line-strong: #b5ada1;
 	/*
-	 * One accent: maroon #6B0F1F. On #F2EEE7 it is 10.6:1, so the same shade works for fills, large type, small
-	 * text and lines. `-display` and `-ink` stay as aliases so components can opt into a different shade later.
+	 * Dark theme (default). Names are semantic: `ink` = page background, `paper` = primary text.
+	 * Light theme overrides live under html[data-theme='light'] below.
+	 * Maroon accent on #0E0E0E: fills #6B0F1F (white text 12.26:1), display #AE2E44 (3.01:1, large type),
+	 * small text / lines #CC5B6B (4.85:1).
 	 */
+	--color-ink: #0e0e0e;
+	--color-panel: #151515;
+	--color-card: #1a1a1a;
+	--color-paper: #ededf0;
+	--color-mute: #8a8f98;
+	--color-line: #2a2a2a;
+	--color-line-strong: #3a3a3a;
 	--color-accent: #6b0f1f;
-	--color-accent-display: #6b0f1f;
-	--color-accent-ink: #6b0f1f;
-	--color-on-accent: #f2eee7;
+	--color-accent-display: #ae2e44;
+	--color-accent-ink: #cc5b6b;
+	--color-on-accent: #ffffff;
 
 	--font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 	--font-sans: var(--font-mono);
@@ -34,6 +36,31 @@
 :root {
 	--gutter: clamp(16px, 3.2vw, 46px);
 	--nav-h: 76px;
+	/* Theme-dependent effects (dark defaults). */
+	--dot: rgb(237 237 240 / 0.05);
+	--glass: rgb(14 14 14 / 0.7);
+	--chip-bg: rgb(14 14 14 / 0.85);
+	--shadow: rgb(0 0 0 / 0.6);
+}
+
+/* Light theme: warm paper. One maroon (#6B0F1F, 10.6:1 on #F2EEE7) works for every accent role. */
+html[data-theme='light'] {
+	--color-ink: #f2eee7;
+	--color-panel: #ebe6dd;
+	--color-card: #fbf9f5;
+	--color-paper: #141212;
+	--color-mute: #5f5953;
+	--color-line: #d6d0c6;
+	--color-line-strong: #b5ada1;
+	--color-accent: #6b0f1f;
+	--color-accent-display: #6b0f1f;
+	--color-accent-ink: #6b0f1f;
+	--color-on-accent: #f2eee7;
+	--dot: rgb(20 18 18 / 0.09);
+	--glass: rgb(242 238 231 / 0.7);
+	--chip-bg: rgb(242 238 231 / 0.9);
+	--shadow: rgb(20 18 18 / 0.45);
+	color-scheme: light;
 }
 
 /* ---------- Base ---------- */
@@ -43,7 +70,7 @@
 		color: var(--color-paper);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-		color-scheme: light;
+		color-scheme: dark;
 	}
 	/* Background lives on <html> only, so the fixed dot grid (z-index -1) shows through <body>. */
 	body {
@@ -113,7 +140,7 @@
 		gap: 0.75rem;
 		padding: 7px 12px;
 		border: 1px solid var(--color-line-strong);
-		background: rgb(242 238 231 / 0.7);
+		background: var(--glass);
 		font-size: 12px;
 		font-weight: 700;
 		letter-spacing: 0.14em;

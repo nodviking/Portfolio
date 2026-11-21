@@ -2,6 +2,7 @@
 	import { tick, untrack } from 'svelte';
 	import { page } from '$app/state';
 	import { magnetic } from '#lib/actions/magnetic.ts';
+	import ThemeToggle from '#lib/components/ui/ThemeToggle.svelte';
 	import { primaryLinks } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 	import MenuOverlay from './MenuOverlay.svelte';
@@ -115,10 +116,11 @@
 			</ul>
 		</nav>
 
+		<div class="flex items-center gap-3">
+		<ThemeToggle />
 		<a href="/#contact" class="btn hidden md:inline-flex" use:magnetic={{ strength: 0.2 }}>
 			<span>Connect</span><span aria-hidden="true" data-no-scramble>↗</span>
 		</a>
-
 		<button
 			bind:this={menuButton}
 			type="button"
@@ -130,6 +132,7 @@
 		>
 			<span></span><span></span>
 		</button>
+		</div>
 	</div>
 </header>
 

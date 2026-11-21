@@ -132,7 +132,7 @@
 		border-radius: 16px;
 		overflow: hidden;
 		background: var(--color-panel);
-		box-shadow: 0 16px 36px -20px rgb(20 18 18 / 0.5);
+		box-shadow: 0 16px 36px -20px var(--shadow);
 		transform-origin: 50% 50%;
 		will-change: transform;
 	}
@@ -149,8 +149,8 @@
 		bottom: 8px;
 		padding: 2px 7px;
 		border-radius: 6px;
-		background: rgb(242 238 231 / 0.9);
-		color: var(--color-accent);
+		background: var(--chip-bg);
+		color: var(--color-accent-ink);
 		font-size: 10px;
 		font-weight: 700;
 		letter-spacing: 0.06em;

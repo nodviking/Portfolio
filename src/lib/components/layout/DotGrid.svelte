@@ -33,7 +33,7 @@
 		inset: 0 0 calc(var(--cell) * -1) 0;
 		z-index: -1;
 		pointer-events: none;
-		background-image: radial-gradient(circle at center, rgb(20 18 18 / 0.09) 1.1px, transparent 1.6px);
+		background-image: radial-gradient(circle at center, var(--dot) 1.1px, transparent 1.6px);
 		background-size: var(--cell) var(--cell);
 		background-position: calc(var(--cell) / 2) calc(var(--cell) / 2);
 		will-change: transform;

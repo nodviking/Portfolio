@@ -75,7 +75,7 @@
 		height: 100%;
 		z-index: 55;
 		pointer-events: none;
-		background: rgb(20 18 18 / 0.06);
+		background: var(--color-line);
 	}
 	.bar {
 		width: 100%;

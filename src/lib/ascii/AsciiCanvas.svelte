@@ -2,6 +2,7 @@
 	import { untrack } from 'svelte';
 	import { createField, textSource, type Field } from './field.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
+	import { theme } from '#lib/stores/theme.svelte.ts';
 
 	/**
 	 * Canvas that draws `lines` of text as ASCII art. Reveal is controlled by the parent (`reveal` 0..1), so it can be
@@ -52,7 +53,8 @@
 
 	$effect(() => {
 		if (!ready) return;
-		const color = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-ink').trim() || '#6b0f1f';
+		void theme.current; // repaint in the new accent when the theme changes
+		const color = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-ink').trim() || '#cc5b6b';
 		const f = createField({ canvas, cell, color, dust, pointer, fps, still: motion.reduced });
 		field = f;
 		let alive = true;
