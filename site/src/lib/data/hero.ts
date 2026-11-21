@@ -3,6 +3,15 @@
 /** Preloader word sequence. The last word should be the brand. */
 export const introWords = ['Create', 'Connect', 'nodviking'] as const;
 
+/**
+ * The hero wordmark, split where it breaks onto two lines on phones (< 600px). It reads as one word
+ * ("nodviking") in the DOM, so SEO and screen readers are unaffected.
+ */
+export const heroWordmark = ['nod', 'viking'] as const;
+
+/** Code-style tag above the wordmark. */
+export const heroTag = '<DEV × DESIGN />';
+
 /** Three short all-caps lines under the wordmark. */
 export const heroLines = [
 	'Developer × designer.',

@@ -1,13 +1,15 @@
 <script lang="ts">
 	import '../app.css';
-	import '@fontsource/anton/latin-400.css';
+	import '@fontsource-variable/archivo/wdth.css';
 	import '@fontsource-variable/inter-tight';
-	import antonUrl from '@fontsource/anton/files/anton-latin-400-normal.woff2?url';
+	import '@fontsource-variable/jetbrains-mono/wght.css';
+	import displayFontUrl from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
 
 	import { handleHashLinkClick, startLenis } from '#lib/animations/lenis.ts';
 	import { ScrollTrigger } from '#lib/animations/gsap.ts';
 	import Cursor from '#lib/components/layout/Cursor.svelte';
 	import Footer from '#lib/components/layout/Footer.svelte';
+	import DotGrid from '#lib/components/layout/DotGrid.svelte';
 	import Grain from '#lib/components/layout/Grain.svelte';
 	import Nav from '#lib/components/layout/Nav.svelte';
 	import Preloader from '#lib/components/layout/Preloader.svelte';
@@ -59,7 +61,7 @@
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 	<link
 		rel="preload"
-		href={antonUrl}
+		href={displayFontUrl}
 		as="font"
 		type="font/woff2"
 		crossorigin="anonymous"
@@ -73,6 +75,7 @@
 
 <a href="#main" class="skip-link pill bg-ink">Skip to content</a>
 
+<DotGrid />
 <Nav />
 
 <main id="main" inert={motion.menuOpen}>

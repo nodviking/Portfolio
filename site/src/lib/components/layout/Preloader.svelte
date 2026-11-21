@@ -85,7 +85,7 @@
 			<p
 				data-word
 				class={[
-					'absolute font-display text-[clamp(3.2rem,12vw,10rem)] leading-none uppercase',
+					'absolute font-display text-[clamp(2rem,9.4vw,9rem)] leading-none uppercase',
 					i === introWords.length - 1 ? 'text-accent' : 'text-paper'
 				]}
 			>

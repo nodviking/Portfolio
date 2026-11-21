@@ -121,7 +121,7 @@
 							>{String(i + 1).padStart(2, '0')}</span
 						>
 						<span
-							class="font-display text-[clamp(3.4rem,12vw,8.5rem)] leading-[0.92] text-paper uppercase transition-colors duration-500 ease-[var(--ease-expo)] group-hover:text-accent group-focus-visible:text-accent"
+							class="font-display text-[clamp(2.4rem,8.4vw,7rem)] leading-[0.98] text-paper uppercase transition-colors duration-500 ease-[var(--ease-expo)] group-hover:text-accent group-focus-visible:text-accent"
 							>{link.label}</span
 						>
 					</a>

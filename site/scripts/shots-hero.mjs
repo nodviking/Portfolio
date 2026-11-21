@@ -52,6 +52,8 @@ const scrollToProgress = async (page, p) => {
 	await page.screenshot({ path: `${out}/1440-lens.png` });
 	await page.mouse.move(1430, 890);
 
+	await scrollToProgress(page, 0.4);
+	await page.screenshot({ path: `${out}/1440-scroll-40.png` });
 	await scrollToProgress(page, 0.5);
 	await page.screenshot({ path: `${out}/1440-scroll-50.png` });
 	await scrollToProgress(page, 1);
@@ -84,6 +86,12 @@ const scrollToProgress = async (page, p) => {
 	await page.waitForTimeout(3800);
 	console.log('390 mode:', await heroMode(page));
 	await page.screenshot({ path: `${out}/390-hero.png` });
+	await page.touchscreen.tap(195, 420);
+	await page.waitForTimeout(260);
+	await page.screenshot({ path: `${out}/390-ripple.png` });
+	await page.waitForTimeout(1500);
+	await scrollToProgress(page, 0.4);
+	await page.screenshot({ path: `${out}/390-scroll-40.png` });
 	await scrollToProgress(page, 0.5);
 	await page.screenshot({ path: `${out}/390-scroll-50.png` });
 	await scrollToProgress(page, 1);

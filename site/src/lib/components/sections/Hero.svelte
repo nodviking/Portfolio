@@ -1,14 +1,16 @@
 <script lang="ts">
 	import { ScrollTrigger } from '#lib/animations/gsap.ts';
 	import LocalTime from '#lib/components/ui/LocalTime.svelte';
-	import { aboutHeadline, heroLines, lensLines } from '#lib/data/hero.ts';
+	import { gsap } from '#lib/animations/gsap.ts';
+	import { aboutHeadline, heroLines, heroTag, heroWordmark, lensLines } from '#lib/data/hero.ts';
 	import { site } from '#lib/data/site.ts';
 	import type { DecryptField } from '#lib/hero/decrypt-field.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
 	/**
 	 * "Decrypt" hero.
-	 * - gl:     WebGL particles decrypt NODVIKING, scatter from the pointer, and re-form into the About headline on scroll.
+	 * - gl:     ASCII-glyph WebGL particles decrypt NODVIKING, breathe at rest, scatter from the pointer (ripple on
+	 *           touch), and re-form into the About headline on scroll while blue bars sweep across as the wipe.
 	 * - static: flat wordmark with a soft glow + headline in normal flow (reduced motion, no WebGL2, Save-Data).
 	 * The real <h1>/<h2> are always in the DOM; in gl mode their text is transparent but still readable/selectable.
 	 */
@@ -20,6 +22,21 @@
 	let aboutFrame: HTMLDivElement;
 	let lens: HTMLDivElement | undefined = $state();
 	let lensRing: HTMLDivElement | undefined = $state();
+	let bars: HTMLDivElement;
+
+	/**
+	 * Blue bars (a nod to the original site's bars) that travel across the stage as one striped wipe during the
+	 * hero → About transition. The group enters from the right and leaves on the left.
+	 */
+	const BAR_COUNT = 9;
+	const barEase = gsap.parseEase('power2.inOut');
+	function paintBars(p: number) {
+		if (!bars) return;
+		const q = Math.min(1, Math.max(0, (p - 0.28) / 0.42));
+		// Group is 120% wide: +100% is fully off right, -120% fully off left.
+		const x = 100 - 220 * barEase(q);
+		bars.style.transform = `translate3d(${x.toFixed(2)}%, 0, 0)`;
+	}
 
 	let mode = $state<'pending' | 'gl' | 'static'>('pending');
 	let progress = $state(0);
@@ -56,7 +73,8 @@
 				aboutText: aboutTitle,
 				aboutFrame,
 				lite,
-				fontFamily: 'Anton'
+				displayFont: (px) => `900 expanded ${px}px "Archivo Variable"`,
+				monoFamily: '"JetBrains Mono Variable", ui-monospace, monospace'
 			});
 			if (cancelled) {
 				f?.destroy();
@@ -95,8 +113,10 @@
 			onUpdate: (self) => {
 				progress = self.progress;
 				field?.setProgress(self.progress);
+				paintBars(self.progress);
 			}
 		});
+		paintBars(st.progress);
 		return () => st.kill();
 	});
 
@@ -148,6 +168,18 @@
 		};
 	});
 
+	// 4b. Touch: a tap sends a ripple ring through the particles.
+	$effect(() => {
+		if (mode !== 'gl' || motion.finePointer) return;
+		const onDown = (e: PointerEvent) => {
+			if (e.pointerType === 'mouse') return;
+			const r = stage.getBoundingClientRect();
+			field?.ripple(e.clientX - r.left, e.clientY - r.top);
+		};
+		stage.addEventListener('pointerdown', onDown, { passive: true });
+		return () => stage.removeEventListener('pointerdown', onDown);
+	});
+
 	// 5. Pause when off-screen or the tab is hidden; rebuild on real resizes.
 	$effect(() => {
 		if (mode !== 'gl') return;
@@ -196,27 +228,49 @@
 		{#if motion.finePointer}
 			<div
 				bind:this={lens}
-				class="lens"
+				class="lens-wrap"
 				aria-hidden="true"
 				style:opacity={mode === 'gl' ? frontOpacity : 0}
 			>
-				{#each lensRows as line, i (i)}
-					<p style:margin-left="-{(i * 37) % 29}ch">{line}</p>
-				{/each}
+				<div class="lens">
+					{#each lensRows as line, i (i)}
+						<p style:margin-left="-{(i * 37) % 29}ch">{line}</p>
+					{/each}
+				</div>
+				<!-- Same text, masked to a thin ring at the lens edge, with a 1px RGB split. -->
+				<div class="lens lens-split">
+					{#each lensRows as line, i (i)}
+						<p style:margin-left="-{(i * 37) % 29}ch">{line}</p>
+					{/each}
+				</div>
 			</div>
 			<div bind:this={lensRing} class="lens-ring" aria-hidden="true"></div>
 		{/if}
+
+		<div bind:this={bars} class="bars" aria-hidden="true">
+			{#each Array.from({ length: BAR_COUNT }, (_, i) => i) as i (i)}<span></span>{/each}
+		</div>
 
 		<canvas bind:this={canvas} class="hero-canvas" aria-hidden="true"></canvas>
 
 		<div class="absolute inset-0 grid place-items-center px-[var(--gutter)] text-center">
 			<div>
+				<div class="hero-in">
+					<p
+						class="caps mb-5 text-accent-soft md:mb-7"
+						style:opacity={mode === 'gl' ? frontOpacity : undefined}
+					>
+						{heroTag}
+					</p>
+				</div>
+				<!-- One word in the DOM ("nodviking"); two lines below 600px by design. -->
 				<h1
 					bind:this={heroTitle}
 					id="hero-title"
-					class="hero-title font-display text-[clamp(4.6rem,19.5vw,20rem)] leading-[0.86] uppercase"
+					class="hero-title font-display text-[17.5vw] leading-[0.95] uppercase min-[600px]:text-[11vw]"
 				>
-					{site.brand}
+					{#each heroWordmark as part (part)}<span class="block min-[600px]:inline">{part}</span
+						>{/each}
 				</h1>
 				<div class="hero-in">
 					<p
@@ -255,7 +309,7 @@
 	<div bind:this={aboutFrame} id="about" class="about-frame px-[var(--gutter)]">
 		<h2
 			bind:this={aboutTitle}
-			class="about-title font-display text-[clamp(3.2rem,10vw,9.5rem)] leading-[0.9] uppercase"
+			class="about-title font-display text-[7.6vw] leading-[1.02] uppercase min-[600px]:text-[6vw]"
 			style:--reveal={mode === 'gl' ? reveal : undefined}
 		>
 			{#each aboutHeadline as line (line)}<span class="block">{line}</span>{/each}
@@ -355,14 +409,19 @@
 	}
 
 	/* Cursor lens: hidden code layer, masked to a circle around the pointer. */
-	.lens {
+	.lens-wrap {
 		--mx: -999px;
 		--my: -999px;
 		--lr: 0px;
 		position: absolute;
 		inset: 0;
+		pointer-events: none;
+	}
+	.lens {
+		position: absolute;
+		inset: 0;
 		padding: 5.5rem var(--gutter) 0;
-		font-family: ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+		font-family: var(--font-mono);
 		font-size: 12px;
 		line-height: 2;
 		white-space: nowrap;
@@ -376,6 +435,48 @@
 		);
 		mask-image: radial-gradient(circle var(--lr) at var(--mx) var(--my), #000 40%, transparent 100%);
 	}
+	/* Edge-only chromatic split, 1px. Subtle on purpose. */
+	.lens-split {
+		color: transparent;
+		text-shadow:
+			-1px 0 rgb(255 70 110 / 0.55),
+			1px 0 rgb(80 220 255 / 0.6);
+		-webkit-mask-image: radial-gradient(
+			circle var(--lr) at var(--mx) var(--my),
+			transparent 68%,
+			#000 86%,
+			transparent 100%
+		);
+		mask-image: radial-gradient(
+			circle var(--lr) at var(--mx) var(--my),
+			transparent 68%,
+			#000 86%,
+			transparent 100%
+		);
+	}
+
+	/* Transition wipe bars (gl mode only; transforms are scroll-driven). */
+	.bars {
+		position: absolute;
+		top: 0;
+		bottom: 0;
+		left: 0;
+		width: 120%;
+		display: none;
+		justify-content: space-between;
+		pointer-events: none;
+		transform: translate3d(100%, 0, 0);
+		will-change: transform;
+	}
+	.is-gl .bars {
+		display: flex;
+	}
+	.bars span {
+		width: 4vw;
+		height: 100%;
+		background: var(--color-accent);
+	}
+
 	.lens-ring {
 		position: absolute;
 		top: 0;
