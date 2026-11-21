@@ -22,7 +22,12 @@
 <section id="lab" data-section="05" class="section" aria-labelledby="lab-title">
 	<SectionHead id="lab" title="More builds" titleId="lab-title" />
 
-	<div class="grid gap-x-6 gap-y-14 md:grid-cols-3">
+	<div
+		class={[
+			'grid gap-x-6 gap-y-14',
+			lab.length >= 3 ? 'md:grid-cols-3' : lab.length === 2 ? 'md:grid-cols-2' : 'md:max-w-[640px]'
+		]}
+	>
 		{#each lab as item, i (item.title)}
 			<div use:reveal={{ clip: false, y: 48, delay: i * 0.1 }}>
 				<article
