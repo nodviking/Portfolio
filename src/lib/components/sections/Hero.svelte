@@ -145,12 +145,6 @@
 	class={['hero', played && 'is-played']}
 	aria-labelledby="hero-title"
 >
-	<!-- Ambient character field behind the hero; scrambles under the cursor. -->
-	{#if motion.finePointer && !motion.reduced}
-		<div class="dust" aria-hidden="true">
-			<AsciiCanvas lines={['']} dust={0.018} pointer cell={10} fps={20} defer />
-		</div>
-	{/if}
 
 	<div bind:this={wrap} class="wm-wrap">
 		<!-- Spec-drawing annotations -->
@@ -217,12 +211,6 @@
 	.hero {
 		position: relative;
 	}
-	.dust {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-		opacity: 0.55;
-	}
 	.wm-box {
 		position: relative;
 	}
@@ -243,25 +231,7 @@
 		margin-bottom: 0.9rem;
 	}
 	@media (max-width: 599px) {
-		.hero {
-		position: relative;
-	}
-	.dust {
-		position: absolute;
-		inset: 0;
-		z-index: -1;
-		opacity: 0.55;
-	}
-	.wm-box {
-		position: relative;
-	}
-	.ascii {
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-
-	.annos {
+		.annos {
 			font-size: 9px;
 			letter-spacing: 0.04em;
 		}

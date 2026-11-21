@@ -51,11 +51,13 @@
 			data-no-scramble
 			style="--r:{pose[i].r}deg; --x:{pose[i].x}%; --y:{pose[i].y}px; z-index:{pose[i].z}; --deal:{motion.reduced ? 1 : 0}"
 		>
+			<span class="media">
+				<img src={c.img} alt={c.alt} loading="lazy" decoding="async" style:object-position={c.pos ?? '50% 0%'} />
+			</span>
 			<span class="label">
 				<span class="t">{c.title}</span>
 				<span class="s">{c.sub}</span>
 			</span>
-			<img src={c.img} alt={c.alt} loading="lazy" decoding="async" style:object-position={c.pos} />
 		</a>
 	{/each}
 </div>
@@ -64,11 +66,11 @@
 	.fan {
 		--tx: 0;
 		position: relative;
-		height: clamp(230px, 30vw, 420px);
-		margin-top: clamp(2rem, 5vw, 4rem);
+		height: clamp(290px, 33vw, 460px);
+		margin-top: clamp(1rem, 2.5vw, 2rem);
 		overflow: hidden;
 		/* Cards bleed off the bottom edge like a hand of cards. */
-		mask-image: linear-gradient(to bottom, #000 78%, transparent);
+		mask-image: linear-gradient(to bottom, #000 86%, transparent);
 	}
 	.card {
 		--deal: 1;
@@ -78,10 +80,13 @@
 		top: 6%;
 		width: clamp(130px, 17vw, 250px);
 		aspect-ratio: 3 / 4.2;
+		display: flex;
+		flex-direction: column;
+		padding: 7px;
 		border-radius: 18px;
 		overflow: hidden;
-		background: var(--color-paper);
-		border: 1px solid var(--color-line-strong);
+		background: #fbf9f5;
+		border: 1px solid var(--color-line);
 		box-shadow:
 			0 1px 0 rgb(255 255 255 / 0.4) inset,
 			0 18px 40px -18px rgb(20 18 18 / 0.45);
@@ -99,25 +104,27 @@
 		transform: translateX(calc(-50% + var(--x))) translateY(calc(var(--y) - 28px)) rotate(0deg) scale(1.04);
 		box-shadow: 0 28px 60px -20px rgb(107 15 31 / 0.55);
 	}
-	.card img {
+	.media {
+		flex: 1;
+		min-height: 0;
+		border-radius: 12px;
+		overflow: hidden;
+		background: var(--color-panel);
+	}
+	.media img {
 		width: 100%;
 		height: 100%;
 		object-fit: cover;
-		object-position: top;
 		display: block;
 	}
 	.label {
-		position: absolute;
-		left: 10px;
-		right: 10px;
-		top: 10px;
-		z-index: 1;
 		display: flex;
-		flex-direction: column;
-		padding: 8px 10px;
-		border-radius: 10px;
-		background: rgb(242 238 231 / 0.92);
+		align-items: baseline;
+		justify-content: space-between;
+		gap: 8px;
+		padding: 9px 5px 3px;
 		color: var(--color-paper);
+		white-space: nowrap;
 	}
 	.t {
 		font-weight: 800;
@@ -126,13 +133,20 @@
 		line-height: 1.1;
 	}
 	.s {
-		font-size: 10px;
+		font-size: 9px;
 		text-transform: uppercase;
-		letter-spacing: 0.08em;
+		letter-spacing: 0.06em;
 		color: var(--color-accent);
-		margin-top: 2px;
+		overflow: hidden;
+		text-overflow: ellipsis;
 	}
 	@media (max-width: 639px) {
+		.fan {
+			height: 250px;
+		}
+		.s {
+			display: none;
+		}
 		.card:nth-child(1),
 		.card:nth-child(5) {
 			display: none;

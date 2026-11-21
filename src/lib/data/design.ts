@@ -38,9 +38,9 @@ export const design: DesignPiece[] = [
 
 /** Cards fanned out under the hero intro (code + design work, centre card first in visual weight). */
 export const heroFan: { title: string; sub: string; img: string; alt: string; href: string; pos?: string }[] = [
-	{ title: 'Nanté', sub: 'Patisserie site', img: '/work/nante-patisserie-mobile.webp', alt: 'Nanté Patisserie website on a phone', href: '/work/nante-patisserie' },
+	{ title: 'Nanté', sub: 'Patisserie site', img: '/work/nante-patisserie-mobile.webp', alt: 'Nanté Patisserie website on a phone', href: '/work/nante-patisserie', pos: '50% 30%' },
 	{ title: 'Thumbnails', sub: 'YouTube design', img: '/design/thumb-chainsaw-man.webp', alt: 'YouTube thumbnail design', href: '#design' },
-	{ title: 'StoreEnv', sub: 'Solo product', img: '/work/storeenv-desktop.webp', alt: 'StoreEnv website', href: '#storeenv', pos: '8% 92%' },
+	{ title: 'StoreEnv', sub: 'Solo product', img: '/design/card-storeenv.webp', alt: 'StoreEnv website', href: '#storeenv', pos: '0% 100%' },
 	{ title: 'Lightyear', sub: 'Brand identity', img: '/design/brand-lightyear-cards.webp', alt: 'Lightyear bakery brand identity', href: '#design' },
-	{ title: 'ADC', sub: 'Clinic + dashboard', img: '/work/adc-by-dr-sanjana-mobile.webp', alt: 'Advanced Dental Care website on a phone', href: '/work/adc-by-dr-sanjana' }
+	{ title: 'ADC', sub: 'Clinic + dashboard', img: '/work/adc-by-dr-sanjana-mobile.webp', alt: 'Advanced Dental Care website on a phone', href: '/work/adc-by-dr-sanjana', pos: '50% 22%' }
 ];

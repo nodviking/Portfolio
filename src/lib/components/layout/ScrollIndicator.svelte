@@ -1,5 +1,6 @@
 <script lang="ts">
 	import { page } from '$app/state';
+	import { ScrollTrigger } from '#lib/animations/gsap.ts';
 	import { sections } from '#lib/data/site.ts';
 
 	/**
@@ -50,9 +51,13 @@
 		update();
 		window.addEventListener('scroll', on, { passive: true });
 		window.addEventListener('resize', on);
+		window.addEventListener('load', on);
+		ScrollTrigger.addEventListener('refresh', on);
 		return () => {
 			window.removeEventListener('scroll', on);
 			window.removeEventListener('resize', on);
+			window.removeEventListener('load', on);
+			ScrollTrigger.removeEventListener('refresh', on);
 			if (raf) cancelAnimationFrame(raf);
 		};
 	});
