@@ -14,6 +14,7 @@ export const lines: Action<HTMLElement, { delay?: number } | undefined> = (node,
 	const split = SplitText.create(node, {
 		type: 'lines',
 		mask: 'lines',
+		aria: 'none', // plain spans read naturally; aria-label on a <p> is invalid
 		autoSplit: true,
 		onSplit(self) {
 			st?.kill();

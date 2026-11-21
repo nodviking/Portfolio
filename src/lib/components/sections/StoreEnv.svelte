@@ -29,10 +29,11 @@
 		const paths = panel.querySelectorAll('.d');
 		return gsap
 			.timeline({ paused: true })
+			// Negative insets keep the tab label (above the frame) and the corner nodes inside the clip.
 			.fromTo(
 				panel,
-				{ clipPath: 'inset(0% 100% 0% 0%)' },
-				{ clipPath: 'inset(0% 0% 0% 0%)', duration: 0.8, ease: 'power4.out' }
+				{ clipPath: 'inset(-2rem 100% -1rem -1rem)' },
+				{ clipPath: 'inset(-2rem -1rem -1rem -1rem)', duration: 0.8, ease: 'power4.out' }
 			)
 			.fromTo(paths, { strokeDashoffset: 1 }, { strokeDashoffset: 0, duration: 1, ease: EASE.out, stagger: 0.06 }, 0.2);
 	}

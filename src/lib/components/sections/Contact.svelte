@@ -102,7 +102,6 @@
 			onclick={copy}
 			use:magnetic={{ strength: 0.12 }}
 			data-no-scramble
-			aria-label="Copy email address {site.email}"
 		>
 			<span class="tab-label">MAIL.TO</span>
 			<span bind:this={label} class="email-label">{site.email}</span>

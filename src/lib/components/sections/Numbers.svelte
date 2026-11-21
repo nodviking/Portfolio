@@ -43,7 +43,8 @@
 		{#each numbers as n, i (n.label)}
 			<div class="frame flex flex-col-reverse justify-end gap-4 p-5 md:p-7" use:frameDraw={{ delay: i * 0.08 }}>
 				<dt class="caps text-[11px] text-mute">{n.label}</dt>
-				<dd class="num font-display text-paper" aria-label="{n.value}{n.suffix ?? ''}">
+				<dd class="num font-display text-paper">
+					<span class="sr-only">{n.value}{n.suffix ?? ''}</span>
 					{#each String(n.value).split('') as ch, k (k)}
 						<span class="digit" aria-hidden="true"
 							><span class="strip" data-strip data-digit={ch} style:transform="translateY({pct(Number(ch))}%)"

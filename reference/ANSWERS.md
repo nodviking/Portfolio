@@ -4,49 +4,47 @@ Read this whole file, look at every image in `reference/`, then continue. **Sect
 
 ---
 
-## A. Design direction: Syntax Error-style technical / brutalist, blue accent
+## A. Design direction: Syntax Error style, orange #FF4A00
 
 The look follows the system of **Syntax Error** (https://hackathon.sdslabs.co/) closely, with **my** content, name and
-colour. No copied logo, copy or assets. (Supersedes the earlier Dear Freeda, chrome, glow, particle and wide-grotesk
+colour. No copied logo, copy or assets. Full build spec: `reference/FULL_BUILD.md` (wins on any conflict). (Supersedes the earlier Dear Freeda, chrome, glow, particle and wide-grotesk
 directions; their code has been deleted.)
 
 ### Visual system
 - **Background `#0E0E0E`** (not pure black) with a very faint dot grid (≤4%, slight parallax), behind content only.
-- **One accent: electric blue `#2F6BFF`.** On `#0E0E0E` it is 4.29:1, so it is used for large type, fills and
-  graphics. Small blue text uses `#5B8CFF` (6.1:1). Text on blue fills is white (4.5:1), except the giant VIKING box,
-  which keeps dark text (large text only needs 3:1).
+- **One accent: orange `#FF4A00`** (the live Syntax Error value). 5.73:1 on `#0E0E0E` and 5.73:1 for `#0E0E0E`
+  text on orange fills, so it passes AA for small text both ways. No blue anywhere.
 - **Text:** off-white `#EDEDF0`, muted grey `#8A8F98` for secondary copy.
 - **Font: JetBrains Mono everywhere** (self-hosted). Display = 800 weight, tight tracking (−0.06em), uppercase,
   line-height 0.9. Body = regular. Labels = 12px/700, tracked +0.1em, uppercase.
 - **No glow, no blur, no gradients.** Crisp flat colour only.
-- **Frames:** 1px `#2A2A2A` borders with small square corner nodes. **Filled blue tab labels** on cards, e.g.
+- **Frames:** 1px `#2A2A2A` borders with small square corner nodes. **Filled orange tab labels** on cards, e.g.
   `01 / STOREENV.CLI`.
-- **Buttons:** solid blue, square corners, uppercase mono, `↗` for outbound links.
-- **Tags:** outlined square-cornered pills with a small blue square marker, e.g. `DEVELOPER × DESIGNER · DELHI`.
-- **Isometric cube icons** (CSS/SVG) for project cards and the logo mark.
-- **Thin blue scroll indicator** on the right edge.
+- **Buttons:** solid orange, square corners, uppercase mono, `↗` for outbound links.
+- **Tags:** outlined square-cornered pills with a small orange square marker, e.g. `DEVELOPER × DESIGNER · DELHI`.
+- **No cubes anywhere.** No isometric icons, no cube logo mark.
+- **Thin orange scroll indicator** on the right edge.
 
 ### Layout + signature moments
-- **Nav:** cube logo mark + NODVIKING (ScrambleText) on the left, centred links with blue numbers
-  (`01 WORK  02 ABOUT  03 CONTACT`), solid blue `CONNECT ↗` on the right. Hides on scroll down, shows on scroll up.
+- **Nav:** the scrambling NODVIKING mono wordmark on the left (no logo mark), centred links with orange numbers
+  (`01 WORK  02 ABOUT  03 CONTACT`), solid orange `CONNECT ↗` on the right. Hides on scroll down, shows on scroll up.
   Fullscreen menu (burger on mobile) with focus trap.
 - **Preloader:** CREATE → CONNECT → NODVIKING letter stagger with a 000–100 counter, then a wipe. Skipped on repeat
   visits and under reduced motion.
-- **Hero:** outlined role tag at the top, an isometric cube field in the middle, and the big two-word wordmark at the
-  bottom centre: **"NOD" in solid blue + "VIKING" in a solid blue box with dark text**. Below a 1px divider: two
-  lines of intro on the left (white + muted), and on the right a muted status line ("Available for freelance work")
-  plus a solid blue **"View StoreEnv ↗"** button.
+- **Hero:** outlined role tag at the top; the huge two-word wordmark fills the content width, bottom-anchored:
+  **"NOD" in solid orange + "VIKING" in a solid orange box with dark text** (stacked NOD / VIKING on phones),
+  with spec-drawing annotations (coordinates, live IST clock, version, live dimension line). Below a 1px divider:
+  two lines of intro on the left and `[ SCROLL ↓ ]` on the right. No CTA button, no status line.
 - **Hero intro:** the wordmark letters ScrambleText-decode into place (HTML text only, no canvas), then the box wipes
   in behind VIKING. Short and crisp.
 - **About:** a Developer / Designer **type-specimen card pair** with measurement lines (ASC / CAP / X / BASE / DESC,
-  JetBrains Mono's real metrics), a blue "+" between them, and code-style tags in mono
+  JetBrains Mono's real metrics), a orange "+" between them, and code-style tags in mono
   (`const role = "DEVELOPER";`, `.role { is: DESIGNER; }`), with my own copy. Plus the scroll-lit manifesto
   paragraph with my real name once (Phase 3).
 - **Motion:** crisp. Reveals use clip-path and translate (expo / power4 out). No blur, no glow, no bounce.
   Keep Lenis smooth scroll, magnetic buttons (smooth return, no elastic) and the custom cursor (flat colours,
   no blend modes).
-- Later sections (StoreEnv, client work, stack, achievements, contact) use the same frames, tab labels, cube icons
-  and mono type.
+- Later sections (StoreEnv, client work, stack, achievements, contact) use the same frames, tab labels and mono type.
 
 ---
 
@@ -86,7 +84,7 @@ directions; their code has been deleted.)
 
 **10. AI row in Stack:** yes. LangGraph, FastAPI, LLM APIs (Claude, Gemini, OpenAI), Groq, Hugging Face models.
 
-**11. 3D:** remove the 3D character completely. Use the "decrypt" particle wordmark hero from section A instead.
+**11. 3D:** no 3D, no particles, no WebGL. The type is the hero.
 
 **12. Availability:** yes, show "Available for freelance work" in the hero.
 

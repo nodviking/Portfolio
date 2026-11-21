@@ -11,6 +11,7 @@ export const wordScrub: Action<HTMLElement> = (node) => {
 	let tween: gsap.core.Tween | undefined;
 	const split = SplitText.create(node, {
 		type: 'words',
+		aria: 'none',
 		autoSplit: true,
 		onSplit(self) {
 			tween?.scrollTrigger?.kill();

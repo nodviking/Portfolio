@@ -44,15 +44,17 @@
 		</div>
 
 		<div class="mt-14 grid gap-10 md:grid-cols-[minmax(0,1.1fr)_minmax(0,1fr)] md:gap-14">
-			<dl class="frame self-start" use:frameDraw>
+			<div class="frame self-start" use:frameDraw>
 				<span class="tab-label">02 / SPEC.TXT</span>
+				<dl>
 				{#each spec as row (row.k)}
 					<div class="grid grid-cols-[7.5rem_1fr] gap-4 border-b border-line px-5 py-4 last:border-b-0">
 						<dt class="caps text-[11px] text-mute">{row.k}</dt>
 						<dd class="text-[14px] leading-[1.55] text-paper">{row.v}</dd>
 					</div>
 				{/each}
-			</dl>
+				</dl>
+			</div>
 
 			<div>
 				<p class="text-[clamp(1.05rem,1.6vw,1.35rem)] leading-[1.55] text-paper" use:lines>{c.description}</p>

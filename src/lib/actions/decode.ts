@@ -14,7 +14,8 @@ export const decode: Action<HTMLElement, { delay?: number; duration?: number } |
 	if (motion.reduced || node.children.length > 0) return {};
 	const text = node.textContent ?? '';
 	node.dataset.text = text;
-	gsap.set(node, { visibility: 'hidden' });
+	// clip-path (not visibility) keeps the heading in the accessibility tree before it decodes.
+	gsap.set(node, { clipPath: 'inset(0% 100% 0% 0%)' });
 
 	let tween: gsap.core.Tween | null = null;
 	const st = ScrollTrigger.create({
@@ -22,9 +23,12 @@ export const decode: Action<HTMLElement, { delay?: number; duration?: number } |
 		start: 'top 90%',
 		once: true,
 		onEnter: () => {
+			// Ciphertext can wrap differently from the real words, so hold the box size until decoding ends.
+			const h = node.getBoundingClientRect().height;
+			gsap.set(node, { height: h, clipPath: 'none' });
 			node.textContent = cipherOf(text);
-			gsap.set(node, { visibility: 'visible' });
 			tween = scrambleTo(node, text, opts?.duration ?? 0.9, opts?.delay ?? 0);
+			tween.eventCallback('onComplete', () => gsap.set(node, { clearProps: 'height' }));
 		}
 	});
 
@@ -33,7 +37,7 @@ export const decode: Action<HTMLElement, { delay?: number; duration?: number } |
 			st.kill();
 			tween?.kill();
 			node.textContent = text;
-			gsap.set(node, { clearProps: 'visibility' });
+			gsap.set(node, { clearProps: 'clipPath,height' });
 		}
 	};
 };
