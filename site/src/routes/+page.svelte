@@ -1,9 +1,8 @@
 <script lang="ts">
-	import { site } from '#lib/data/site.ts';
+	import Hero from '#lib/components/sections/Hero.svelte';
 
-	// Phase 1 shell: scene scaffolding only. Each scene is replaced by its real section in later phases.
+	// Remaining scenes are scaffolding until their phases land.
 	const scenes = [
-		{ id: 'about', label: 'About' },
 		{ id: 'storeenv', label: 'StoreEnv' },
 		{ id: 'work', label: 'Client work' },
 		{ id: 'stack', label: 'Stack' },
@@ -11,18 +10,7 @@
 	];
 </script>
 
-<section class="grid min-h-svh place-items-center px-[var(--gutter)] text-center">
-	<div>
-		<h1
-			class="glow-text font-display text-[clamp(4.5rem,19vw,19rem)] leading-[0.85] uppercase"
-		>
-			{site.brand}
-		</h1>
-		<p class="caps mx-auto mt-6 max-w-[34ch] text-paper/90">
-			{site.role}. Full-stack products, developer tools and websites for brands.
-		</p>
-	</div>
-</section>
+<Hero />
 
 {#each scenes as scene (scene.id)}
 	<section

@@ -17,7 +17,9 @@ export function startLenis(): () => void {
 	lenis.on('scroll', ScrollTrigger.update);
 	const tick = (time: number) => lenis.raf(time * 1000);
 	gsap.ticker.add(tick);
-	gsap.ticker.lagSmoothing(0);
+	// Keep GSAP's lag smoothing: if a long task blocks the main thread (e.g. WebGL context creation on a slow
+	// device), timelines pause and resume instead of jumping to the end. Lenis only sees a smaller delta.
+	gsap.ticker.lagSmoothing(500, 33);
 
 	motion.lenis = lenis;
 	ScrollTrigger.refresh();

@@ -10,6 +10,7 @@
 	import Footer from '#lib/components/layout/Footer.svelte';
 	import Grain from '#lib/components/layout/Grain.svelte';
 	import Nav from '#lib/components/layout/Nav.svelte';
+	import Preloader from '#lib/components/layout/Preloader.svelte';
 	import Socials from '#lib/components/layout/Socials.svelte';
 	import { site, SITE_URL } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
@@ -19,9 +20,12 @@
 
 	$effect(() => motion.listen());
 
-	// TEMP (Phase 1 restyle): no preloader yet, so the intro is done on mount.
+	// Hold scroll while the intro plays.
 	$effect(() => {
-		motion.introDone = true;
+		const lenis = motion.lenis;
+		if (!lenis) return;
+		if (motion.introDone) lenis.start();
+		else lenis.stop();
 	});
 
 	// Smooth scroll only when motion is allowed; tears down if the user flips the OS setting.
@@ -88,5 +92,6 @@
 	<Socials />
 </div>
 
+<Preloader />
 <Cursor />
 <Grain />
