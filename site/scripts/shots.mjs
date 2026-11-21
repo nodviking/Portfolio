@@ -23,8 +23,15 @@ for (const [w, h] of widths) {
 	page.on('console', (m) => m.type() === 'error' && errors.push(`${w}: ${m.text()}`));
 	await page.goto(base, { waitUntil: 'networkidle' });
 	await page.evaluate(() => document.fonts.ready);
-	await page.waitForTimeout(600);
+	await page.waitForTimeout(Number(process.env.SETTLE ?? 2400));
 	await page.screenshot({ path: `${out}/${w}-hero.png` });
+
+	if (w === 1440) {
+		await page.getByRole('link', { name: 'Work', exact: true }).first().hover();
+		await page.waitForTimeout(700);
+		await page.screenshot({ path: `${out}/${w}-pill-hover.png`, clip: { x: 0, y: 0, width: 1440, height: 120 } });
+		await page.mouse.move(720, 450);
+	}
 
 	if (w === 390 || w === 1440) {
 		await page.getByRole('button', { name: 'Menu' }).click();

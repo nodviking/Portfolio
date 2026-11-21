@@ -3,7 +3,7 @@
 	import { magnetic } from '#lib/actions/magnetic.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 	import MenuOverlay from './MenuOverlay.svelte';
-	import Monogram from './Monogram.svelte';
+	import NavWordmark from './NavWordmark.svelte';
 
 	let hidden = $state(false);
 	let menuButton: HTMLButtonElement;
@@ -40,10 +40,10 @@
 
 		<a
 			href="/"
-			class="pointer-events-auto absolute top-4 left-1/2 -translate-x-1/2 rounded-full md:top-6"
+			class="pointer-events-auto absolute top-5 left-1/2 flex h-9 -translate-x-1/2 items-center rounded-full px-2 md:top-7"
 			aria-label="nodviking, home"
 		>
-			<Monogram />
+			<NavWordmark />
 		</a>
 
 		<button

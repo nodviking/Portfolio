@@ -118,10 +118,10 @@
 		display: grid;
 		place-items: center;
 	}
+	/* Outline only: a white fill under difference-blend would turn sky-blue into orange. */
 	.ring.hover {
 		width: 64px;
 		height: 64px;
-		background: #fff;
 	}
 	.ring.label {
 		width: 92px;

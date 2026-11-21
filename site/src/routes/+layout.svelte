@@ -1,6 +1,8 @@
 <script lang="ts">
 	import '../app.css';
+	import '@fontsource/anton/latin-400.css';
 	import '@fontsource-variable/inter-tight';
+	import antonUrl from '@fontsource/anton/files/anton-latin-400-normal.woff2?url';
 
 	import { handleHashLinkClick, startLenis } from '#lib/animations/lenis.ts';
 	import { ScrollTrigger } from '#lib/animations/gsap.ts';
@@ -16,6 +18,11 @@
 	let { children }: LayoutProps = $props();
 
 	$effect(() => motion.listen());
+
+	// TEMP (Phase 1 restyle): no preloader yet, so the intro is done on mount.
+	$effect(() => {
+		motion.introDone = true;
+	});
 
 	// Smooth scroll only when motion is allowed; tears down if the user flips the OS setting.
 	$effect(() => {
@@ -48,7 +55,7 @@
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 	<link
 		rel="preload"
-		href="/fonts/gambarino-regular.woff2"
+		href={antonUrl}
 		as="font"
 		type="font/woff2"
 		crossorigin="anonymous"

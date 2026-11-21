@@ -8,6 +8,8 @@ class MotionState {
 	reduced = $state(false);
 	finePointer = $state(false);
 	menuOpen = $state(false);
+	/** Flips true when the preloader hands off to the page (or immediately when it is skipped). */
+	introDone = $state(false);
 	lenis = $state.raw<Lenis | null>(null);
 
 	constructor() {

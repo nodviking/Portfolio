@@ -14,7 +14,7 @@
 <section class="grid min-h-svh place-items-center px-[var(--gutter)] text-center">
 	<div>
 		<h1
-			class="chrome-text font-display text-[clamp(4rem,15vw,15rem)] leading-[0.85] tracking-[-0.01em]"
+			class="glow-text font-display text-[clamp(4.5rem,19vw,19rem)] leading-[0.85] uppercase"
 		>
 			{site.brand}
 		</h1>

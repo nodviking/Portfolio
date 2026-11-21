@@ -1,34 +1,19 @@
 @import 'tailwindcss';
 
-/* ---------- Self-hosted display faces (Fontshare, ITF Free Font License) ---------- */
-@font-face {
-	font-family: 'Gambarino';
-	src: url('/fonts/gambarino-regular.woff2') format('woff2');
-	font-weight: 400;
-	font-style: normal;
-	font-display: swap;
-}
-@font-face {
-	font-family: 'Boska';
-	src: url('/fonts/boska-variable.woff2') format('woff2');
-	font-weight: 200 900;
-	font-style: normal;
-	font-display: swap;
-}
-
 /* ---------- Design tokens (exposed as CSS vars + Tailwind utilities) ---------- */
 @theme {
 	--color-ink: #000000;
-	--color-paper: #f3f1ec;
-	--color-mute: #8e8b86;
-	--color-line: rgb(243 241 236 / 0.28);
-	--color-glass: rgb(118 80 50 / 0.42);
-	--color-glass-edge: rgb(255 232 208 / 0.16);
-	--color-moss: #3f6b3c;
-	--color-coral: #ff6a4d;
-	--color-blood: #d3241c;
+	--color-paper: #f2f4f6;
+	--color-mute: #8a9099;
+	--color-line: rgb(242 244 246 / 0.24);
+	/* The one accent: electric sky-blue */
+	--color-sky: #38bdf8;
+	--color-sky-deep: #0284c7;
+	/* Cool frosted glass */
+	--color-glass: rgb(16 28 40 / 0.5);
+	--color-glass-edge: rgb(186 230 253 / 0.14);
 
-	--font-display: 'Gambarino', 'Boska', 'Times New Roman', serif;
+	--font-display: 'Anton', 'Anton Fallback', Impact, 'Arial Narrow', sans-serif;
 	--font-sans: 'Inter Tight Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
 
 	--radius-card: 24px;
@@ -37,9 +22,21 @@
 	--ease-quart-in-out: cubic-bezier(0.76, 0, 0.24, 1);
 }
 
+/* Metric-matched fallback so the Anton swap doesn't shift layout. */
+@font-face {
+	font-family: 'Anton Fallback';
+	src: local('Impact'), local('Arial Narrow Bold'), local('Arial');
+	size-adjust: 98%;
+	ascent-override: 116%;
+	descent-override: 33%;
+}
+
 :root {
 	--gutter: clamp(16px, 2.4vw, 32px);
 	--nav-h: 72px;
+	--glow-sm: 0 0 8px rgb(56 189 248 / 0.55), 0 0 24px rgb(56 189 248 / 0.25);
+	--glow-lg: 0 0 12px rgb(56 189 248 / 0.6), 0 0 48px rgb(56 189 248 / 0.35),
+		0 0 120px rgb(56 189 248 / 0.18);
 }
 
 /* ---------- Base ---------- */
@@ -109,7 +106,7 @@
 		gap: 0.5rem;
 		height: 2.25rem;
 		padding-inline: 1.25rem;
-		border: 1px solid rgb(243 241 236 / 0.85);
+		border: 1px solid rgb(242 244 246 / 0.7);
 		border-radius: 999px;
 		font-size: 11px;
 		letter-spacing: 0.06em;
@@ -118,53 +115,31 @@
 		background: rgb(0 0 0 / 0.25);
 		backdrop-filter: blur(8px);
 		transition:
-			background-color 0.5s var(--ease-expo),
+			border-color 0.5s var(--ease-expo),
+			box-shadow 0.5s var(--ease-expo),
 			color 0.5s var(--ease-expo);
 	}
-	.pill:hover {
-		background: var(--color-paper);
-		color: var(--color-ink);
+	.pill:hover,
+	.pill:focus-visible {
+		border-color: var(--color-sky);
+		color: var(--color-sky);
+		box-shadow:
+			0 0 14px rgb(56 189 248 / 0.45),
+			inset 0 0 10px rgb(56 189 248 / 0.15);
+		text-shadow: 0 0 8px rgb(56 189 248 / 0.6);
 	}
 
-	/* Liquid-chrome text. --sx is driven by the pointer for a moving sheen. */
-	.chrome-text {
-		--sx: 50%;
-		/* Vertical "horizon" chrome: sky highlight, dark horizon line, bright ground reflection. */
-		background-image:
-			linear-gradient(
-				105deg,
-				transparent 0%,
-				rgb(255 255 255 / 0) 38%,
-				rgb(255 255 255 / 0.55) 48%,
-				rgb(255 255 255 / 0) 58%,
-				transparent 100%
-			),
-			linear-gradient(
-				180deg,
-				#f4f4f4 0%,
-				#c9c9c9 22%,
-				#8a8a8a 40%,
-				#262626 49%,
-				#5a5a5a 53%,
-				#d7d7d7 66%,
-				#ffffff 78%,
-				#9c9c9c 92%,
-				#6b6b6b 100%
-			);
-		background-size:
-			300% 100%,
-			100% 100%;
-		background-position:
-			var(--sx) 50%,
-			0 0;
-		background-repeat: no-repeat;
-		-webkit-background-clip: text;
-		background-clip: text;
-		color: transparent;
-		-webkit-text-fill-color: transparent;
+	/* Neon sky-blue text */
+	.glow-text {
+		color: var(--color-sky);
+		text-shadow: var(--glow-lg);
+	}
+	.glow-text-sm {
+		color: var(--color-sky);
+		text-shadow: var(--glow-sm);
 	}
 
-	/* Warm frosted-glass panel */
+	/* Cool frosted-glass panel */
 	.glass {
 		background: var(--color-glass);
 		border: 1px solid var(--color-glass-edge);
@@ -186,10 +161,9 @@
 }
 
 @media (forced-colors: active) {
-	.chrome-text {
-		background: none;
-		color: CanvasText;
-		-webkit-text-fill-color: CanvasText;
+	.glow-text,
+	.glow-text-sm {
+		text-shadow: none;
 	}
 }
 
