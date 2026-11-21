@@ -43,6 +43,13 @@ export interface NavLink {
 	href: string;
 }
 
+/** Centered desktop nav links (numbered). */
+export const primaryLinks: NavLink[] = [
+	{ label: 'Work', href: '/#work' },
+	{ label: 'About', href: '/#about' },
+	{ label: 'Contact', href: '/#contact' }
+];
+
 /** Fullscreen menu links (in-page anchors on the home route). */
 export const navLinks: NavLink[] = [
 	{ label: 'Work', href: '/#work' },

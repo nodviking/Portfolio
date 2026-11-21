@@ -1,19 +1,16 @@
 <script lang="ts">
 	import '../app.css';
-	import '@fontsource-variable/archivo/wdth.css';
-	import '@fontsource-variable/inter-tight';
 	import '@fontsource-variable/jetbrains-mono/wght.css';
-	import displayFontUrl from '@fontsource-variable/archivo/files/archivo-latin-wdth-normal.woff2?url';
+	import monoFontUrl from '@fontsource-variable/jetbrains-mono/files/jetbrains-mono-latin-wght-normal.woff2?url';
 
 	import { handleHashLinkClick, startLenis } from '#lib/animations/lenis.ts';
 	import { ScrollTrigger } from '#lib/animations/gsap.ts';
 	import Cursor from '#lib/components/layout/Cursor.svelte';
 	import Footer from '#lib/components/layout/Footer.svelte';
 	import DotGrid from '#lib/components/layout/DotGrid.svelte';
-	import Grain from '#lib/components/layout/Grain.svelte';
 	import Nav from '#lib/components/layout/Nav.svelte';
 	import Preloader from '#lib/components/layout/Preloader.svelte';
-	import Socials from '#lib/components/layout/Socials.svelte';
+	import ScrollIndicator from '#lib/components/layout/ScrollIndicator.svelte';
 	import { site, SITE_URL } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 	import type { LayoutProps } from './$types';
@@ -36,17 +33,6 @@
 		return startLenis();
 	});
 
-	// Fixed socials step aside once the footer (which has its own) scrolls into view.
-	let footerWrap: HTMLDivElement;
-	let footerInView = $state(false);
-	$effect(() => {
-		const io = new IntersectionObserver(([e]) => (footerInView = e.isIntersecting), {
-			rootMargin: '0px 0px -10% 0px'
-		});
-		io.observe(footerWrap);
-		return () => io.disconnect();
-	});
-
 	// Re-measure scroll-driven layouts once web fonts settle.
 	$effect(() => {
 		document.fonts?.ready.then(() => ScrollTrigger.refresh());
@@ -57,11 +43,11 @@
 	<title>{site.title}</title>
 	<meta name="description" content={site.description} />
 	<meta name="author" content={site.realName} />
-	<meta name="theme-color" content="#050507" />
+	<meta name="theme-color" content="#0e0e0e" />
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 	<link
 		rel="preload"
-		href={displayFontUrl}
+		href={monoFontUrl}
 		as="font"
 		type="font/woff2"
 		crossorigin="anonymous"
@@ -73,7 +59,7 @@
 
 <svelte:document onclick={handleHashLinkClick} />
 
-<a href="#main" class="skip-link pill bg-ink">Skip to content</a>
+<a href="#main" class="skip-link tag">Skip to content</a>
 
 <DotGrid />
 <Nav />
@@ -82,19 +68,11 @@
 	{@render children()}
 </main>
 
-<div bind:this={footerWrap} inert={motion.menuOpen}>
+<div inert={motion.menuOpen}>
 	<Footer />
 </div>
 
-<!-- Fixed socials, bottom-left (desktop). On mobile they live in the menu and footer. -->
-<div
-	class="fixed bottom-5 left-[var(--gutter)] z-40 hidden transition-opacity duration-500 md:block"
-	class:opacity-0={motion.menuOpen || footerInView}
-	inert={motion.menuOpen || footerInView}
->
-	<Socials />
-</div>
 
+<ScrollIndicator />
 <Preloader />
 <Cursor />
-<Grain />

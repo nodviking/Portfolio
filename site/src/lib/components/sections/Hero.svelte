@@ -1,522 +1,234 @@
 <script lang="ts">
-	import { ScrollTrigger } from '#lib/animations/gsap.ts';
-	import LocalTime from '#lib/components/ui/LocalTime.svelte';
-	import { gsap } from '#lib/animations/gsap.ts';
-	import { aboutHeadline, heroLines, heroTag, heroWordmark, lensLines } from '#lib/data/hero.ts';
+	import { magnetic } from '#lib/actions/magnetic.ts';
+	import { EASE, gsap } from '#lib/animations/gsap.ts';
+	import HeroArt from '#lib/components/ui/HeroArt.svelte';
+	import { heroCta, heroIntro, heroTag, heroWordmark } from '#lib/data/hero.ts';
 	import { site } from '#lib/data/site.ts';
-	import type { DecryptField } from '#lib/hero/decrypt-field.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
 	/**
-	 * "Decrypt" hero.
-	 * - gl:     ASCII-glyph WebGL particles decrypt NODVIKING, breathe at rest, scatter from the pointer (ripple on
-	 *           touch), and re-form into the About headline on scroll while blue bars sweep across as the wipe.
-	 * - static: flat wordmark with a soft glow + headline in normal flow (reduced motion, no WebGL2, Save-Data).
-	 * The real <h1>/<h2> are always in the DOM; in gl mode their text is transparent but still readable/selectable.
+	 * Hero: outlined role tag at the top, the two-part wordmark at the bottom centre ("NOD" in blue, "VIKING" in a
+	 * blue box with dark text), then a hairline divider with intro copy on the left and status + CTA on the right.
+	 *
+	 * Intro (after the preloader): the wordmark letters ScrambleText-decode into place, then the box wipes in behind
+	 * VIKING. Plain HTML text, no canvas. Under reduced motion everything is simply there.
 	 */
-	let section: HTMLElement;
-	let stage: HTMLDivElement;
-	let canvas: HTMLCanvasElement;
-	let heroTitle: HTMLHeadingElement;
-	let aboutTitle: HTMLHeadingElement;
-	let aboutFrame: HTMLDivElement;
-	let lens: HTMLDivElement | undefined = $state();
-	let lensRing: HTMLDivElement | undefined = $state();
-	let bars: HTMLDivElement;
+	const CIPHER = '0123456789ABCDEF{}<>=/#';
 
-	/**
-	 * Blue bars (a nod to the original site's bars) that travel across the stage as one striped wipe during the
-	 * hero → About transition. The group enters from the right and leaves on the left.
-	 */
-	const BAR_COUNT = 9;
-	const barEase = gsap.parseEase('power2.inOut');
-	function paintBars(p: number) {
-		if (!bars) return;
-		const q = Math.min(1, Math.max(0, (p - 0.28) / 0.42));
-		// Group is 120% wide: +100% is fully off right, -120% fully off left.
-		const x = 100 - 220 * barEase(q);
-		bars.style.transform = `translate3d(${x.toFixed(2)}%, 0, 0)`;
-	}
+	let root: HTMLElement;
+	let first: HTMLSpanElement;
+	let boxed: HTMLSpanElement;
+	/** Once true, the pre-intro hiding CSS no longer applies (it never comes back, even if the effect re-runs). */
+	let played = $state(false);
 
-	let mode = $state<'pending' | 'gl' | 'static'>('pending');
-	let progress = $state(0);
-	let field: DecryptField | null = null;
+	const rand = (n: number) =>
+		Array.from({ length: n }, () => CIPHER[(Math.random() * CIPHER.length) | 0]).join('');
 
-	const frontOpacity = $derived(Math.max(0, 1 - progress * 5));
-	const reveal = $derived(Math.min(1, Math.max(0, (progress - 0.9) / 0.1)));
-
-	// Dense rows (several snippets per row) so whatever the lens lands on reads as code.
-	const lensRows = Array.from({ length: 44 }, (_, i) =>
-		Array.from({ length: 5 }, (_, j) => lensLines[(i * 3 + j * 7) % lensLines.length]).join('   ')
-	);
-
-	// 1. Decide the mode and lazy-load the engine.
 	$effect(() => {
-		const reduced = motion.reduced;
-		const fine = motion.finePointer;
-		const conn = (navigator as Navigator & { connection?: { saveData?: boolean } }).connection;
-		if (reduced || conn?.saveData) {
-			mode = 'static';
-			return;
+		if (!motion.introDone) return;
+		played = true;
+		if (motion.reduced) return;
+
+		const q = (s: string) => root.querySelectorAll<HTMLElement>(s);
+		const scramble = (text: string) => ({
+			duration: 0.75,
+			ease: 'none',
+			scrambleText: { text, chars: CIPHER, revealDelay: 0.25, speed: 0.9, tweenLength: false }
+		});
+
+		// Lock each word's width (in em, so it still scales) and start from same-length ciphertext,
+		// so the centred wordmark never changes width while it decodes.
+		for (const el of [first, boxed]) {
+			const px = parseFloat(getComputedStyle(el).fontSize) || 1;
+			el.style.minWidth = `${el.getBoundingClientRect().width / px}em`;
 		}
+		first.textContent = rand(heroWordmark.first.length);
+		boxed.textContent = rand(heroWordmark.boxed.length);
 
-		const lite = !fine || (navigator.hardwareConcurrency ?? 8) <= 4;
-		let cancelled = false;
+		const tl = gsap
+			.timeline({ defaults: { ease: EASE.out } })
+			.set(q('[data-intro]'), { visibility: 'visible' })
+			.fromTo(
+				q('[data-tag]'),
+				{ clipPath: 'inset(0% 100% 0% 0%)' },
+				{ clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'power4.out' },
+				0
+			)
+			.to(first, scramble(heroWordmark.first.toUpperCase()), 0.05)
+			.to(boxed, scramble(heroWordmark.boxed.toUpperCase()), 0.18)
+			// Box wipes in behind VIKING once it has decoded.
+			.fromTo(
+				boxed,
+				{ '--box-r': '100%' },
+				{ '--box-r': '0%', duration: 0.5, ease: 'power4.inOut' },
+				0.95
+			)
+			// Isometric field rises in, then the blue cube drops onto it.
+			.fromTo(
+				q('[data-art="slab"], [data-art="ghost"], [data-art="dashed"]'),
+				{ y: 16, clipPath: 'inset(0% 0% 100% 0%)' },
+				{ y: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, stagger: 0.02 },
+				0.4
+			)
+			.fromTo(
+				q('[data-art="solid"]'),
+				{ y: -70, clipPath: 'inset(0% 0% 0% 0%)' },
+				{ y: 0, duration: 0.7, ease: 'power4.out' },
+				1.05
+			)
+			.fromTo(
+				q('[data-rule]'),
+				{ scaleX: 0 },
+				{ scaleX: 1, duration: 1, transformOrigin: 'left center' },
+				0.35
+			)
+			.fromTo(
+				q('[data-line]'),
+				{ clipPath: 'inset(0% 0% 100% 0%)', y: 14 },
+				{ clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 0.8, stagger: 0.07 },
+				0.55
+			);
 
-		(async () => {
-			const { createDecryptField } = await import('#lib/hero/decrypt-field.ts');
-			if (cancelled) return;
-			const f = await createDecryptField({
-				canvas,
-				stage,
-				heroText: heroTitle,
-				aboutText: aboutTitle,
-				aboutFrame,
-				lite,
-				displayFont: (px) => `900 expanded ${px}px "Archivo Variable"`,
-				monoFamily: '"JetBrains Mono Variable", ui-monospace, monospace'
+		return () => {
+			tl.kill();
+			first.textContent = heroWordmark.first;
+			boxed.textContent = heroWordmark.boxed;
+			gsap.set(q('[data-tag], [data-rule], [data-line], [data-art]'), {
+				clearProps: 'clipPath,transform'
 			});
-			if (cancelled) {
-				f?.destroy();
-				return;
-			}
-			if (!f) {
-				mode = 'static';
-				return;
-			}
-			field = f;
-			mode = 'gl';
-		})().catch((err) => {
-			console.warn('[hero] WebGL field unavailable, using static hero', err);
-			mode = 'static';
-		});
-
-		return () => {
-			cancelled = true;
-			field?.destroy();
-			field = null;
-		};
-	});
-
-	// 2. Start the decrypt as the preloader hands off.
-	$effect(() => {
-		if (mode === 'gl' && motion.introDone) field?.start();
-	});
-
-	// 3. Scroll progress across the sticky stage → disperse / re-form.
-	$effect(() => {
-		if (mode !== 'gl') return;
-		const st = ScrollTrigger.create({
-			trigger: section,
-			start: 'top top',
-			end: 'bottom bottom',
-			onUpdate: (self) => {
-				progress = self.progress;
-				field?.setProgress(self.progress);
-				paintBars(self.progress);
-			}
-		});
-		paintBars(st.progress);
-		return () => st.kill();
-	});
-
-	// 4. Pointer physics + cursor lens (fine pointers only).
-	$effect(() => {
-		if (mode !== 'gl' || !motion.finePointer || !lens || !lensRing) return;
-		const lensEl = lens;
-		const ringEl = lensRing;
-		let mx = 0;
-		let my = 0;
-		let lr = 0;
-		let target = 0;
-		let raf = 0;
-
-		const paint = () => {
-			raf = 0;
-			lr += (target - lr) * 0.16;
-			lensEl.style.setProperty('--mx', `${mx}px`);
-			lensEl.style.setProperty('--my', `${my}px`);
-			lensEl.style.setProperty('--lr', `${lr.toFixed(1)}px`);
-			ringEl.style.transform = `translate(${mx - lr}px, ${my - lr}px)`;
-			ringEl.style.width = ringEl.style.height = `${lr * 2}px`;
-			if (Math.abs(target - lr) > 0.4) raf = requestAnimationFrame(paint);
-		};
-		const kick = () => {
-			if (!raf) raf = requestAnimationFrame(paint);
-		};
-		const onMove = (e: PointerEvent) => {
-			if (e.pointerType !== 'mouse') return;
-			const r = stage.getBoundingClientRect();
-			mx = e.clientX - r.left;
-			my = e.clientY - r.top;
-			target = 150;
-			field?.setPointer(mx, my);
-			kick();
-		};
-		const onLeave = () => {
-			target = 0;
-			field?.setPointer(null, null);
-			kick();
-		};
-
-		stage.addEventListener('pointermove', onMove, { passive: true });
-		stage.addEventListener('pointerleave', onLeave);
-		return () => {
-			stage.removeEventListener('pointermove', onMove);
-			stage.removeEventListener('pointerleave', onLeave);
-			if (raf) cancelAnimationFrame(raf);
-		};
-	});
-
-	// 4b. Touch: a tap sends a ripple ring through the particles.
-	$effect(() => {
-		if (mode !== 'gl' || motion.finePointer) return;
-		const onDown = (e: PointerEvent) => {
-			if (e.pointerType === 'mouse') return;
-			const r = stage.getBoundingClientRect();
-			field?.ripple(e.clientX - r.left, e.clientY - r.top);
-		};
-		stage.addEventListener('pointerdown', onDown, { passive: true });
-		return () => stage.removeEventListener('pointerdown', onDown);
-	});
-
-	// 5. Pause when off-screen or the tab is hidden; rebuild on real resizes.
-	$effect(() => {
-		if (mode !== 'gl') return;
-		let inView = true;
-		const sync = () => field?.setRunning(inView && !document.hidden);
-		const io = new IntersectionObserver(([e]) => {
-			inView = e.isIntersecting;
-			sync();
-		});
-		io.observe(section);
-		document.addEventListener('visibilitychange', sync);
-
-		let lastW = window.innerWidth;
-		let lastH = window.innerHeight;
-		let timer: ReturnType<typeof setTimeout> | undefined;
-		const onResize = () => {
-			const w = window.innerWidth;
-			const h = window.innerHeight;
-			// Ignore mobile URL-bar height jitter.
-			if (w === lastW && (!motion.finePointer || h === lastH)) return;
-			lastW = w;
-			lastH = h;
-			clearTimeout(timer);
-			timer = setTimeout(() => {
-				field?.rebuild();
-				ScrollTrigger.refresh();
-			}, 200);
-		};
-		window.addEventListener('resize', onResize);
-
-		return () => {
-			io.disconnect();
-			document.removeEventListener('visibilitychange', sync);
-			window.removeEventListener('resize', onResize);
-			clearTimeout(timer);
+			gsap.set(boxed, { '--box-r': '0%' });
 		};
 	});
 </script>
 
-<section
-	bind:this={section}
-	class={['hero', mode === 'gl' && 'is-gl', mode === 'static' && 'is-static', motion.introDone && 'is-in']}
-	aria-labelledby="hero-title"
->
-	<div bind:this={stage} class="hero-stage">
-		{#if motion.finePointer}
-			<div
-				bind:this={lens}
-				class="lens-wrap"
-				aria-hidden="true"
-				style:opacity={mode === 'gl' ? frontOpacity : 0}
-			>
-				<div class="lens">
-					{#each lensRows as line, i (i)}
-						<p style:margin-left="-{(i * 37) % 29}ch">{line}</p>
-					{/each}
-				</div>
-				<!-- Same text, masked to a thin ring at the lens edge, with a 1px RGB split. -->
-				<div class="lens lens-split">
-					{#each lensRows as line, i (i)}
-						<p style:margin-left="-{(i * 37) % 29}ch">{line}</p>
-					{/each}
-				</div>
-			</div>
-			<div bind:this={lensRing} class="lens-ring" aria-hidden="true"></div>
-		{/if}
-
-		<div bind:this={bars} class="bars" aria-hidden="true">
-			{#each Array.from({ length: BAR_COUNT }, (_, i) => i) as i (i)}<span></span>{/each}
-		</div>
-
-		<canvas bind:this={canvas} class="hero-canvas" aria-hidden="true"></canvas>
-
-		<div class="absolute inset-0 grid place-items-center px-[var(--gutter)] text-center">
-			<div>
-				<div class="hero-in">
-					<p
-						class="caps mb-5 text-accent-soft md:mb-7"
-						style:opacity={mode === 'gl' ? frontOpacity : undefined}
-					>
-						{heroTag}
-					</p>
-				</div>
-				<!-- One word in the DOM ("nodviking"); two lines below 600px by design. -->
-				<h1
-					bind:this={heroTitle}
-					id="hero-title"
-					class="hero-title font-display text-[17.5vw] leading-[0.95] uppercase min-[600px]:text-[11vw]"
-				>
-					{#each heroWordmark as part (part)}<span class="block min-[600px]:inline">{part}</span
-						>{/each}
-				</h1>
-				<div class="hero-in">
-					<p
-						class="caps mx-auto mt-5 text-paper/85 md:mt-7"
-						style:opacity={mode === 'gl' ? frontOpacity : undefined}
-					>
-						{#each heroLines as line (line)}<span class="block">{line}</span>{/each}
-					</p>
-				</div>
-			</div>
-		</div>
-
-		<div class="hero-in absolute inset-x-0 bottom-5 md:bottom-7">
-		<div
-			class="caps flex items-end justify-between gap-4 px-[var(--gutter)] text-paper/80 md:grid md:grid-cols-3"
-			style:opacity={mode === 'gl' ? frontOpacity : undefined}
-		>
-			<span class="shrink-0 md:hidden"><LocalTime /></span>
-			<a href="#about" class="scroll-cue hidden justify-self-center md:col-start-2 md:flex">
-				<span>Scroll</span><span class="cue-line" aria-hidden="true"></span>
-			</a>
-			<span class="flex flex-col items-end gap-1 justify-self-end text-right">
-				{#if site.available}
-					<span class="flex items-center gap-2">
-						<span class="size-1.5 rounded-full bg-accent" aria-hidden="true"
-						></span>{site.availability}
-					</span>
-				{/if}
-				<span class="hidden md:inline">{site.location} · <LocalTime /></span>
-			</span>
-		</div>
-		</div>
+<section bind:this={root} class={['hero', played && 'is-played']} aria-labelledby="hero-title">
+	<div class="flex justify-center">
+		<p class="tag" data-intro data-tag>
+			<span class="tag-mark" aria-hidden="true"></span>{heroTag}
+		</p>
 	</div>
 
-	<!-- Where the particles land: the last viewport of the section. -->
-	<div bind:this={aboutFrame} id="about" class="about-frame px-[var(--gutter)]">
-		<h2
-			bind:this={aboutTitle}
-			class="about-title font-display text-[7.6vw] leading-[1.02] uppercase min-[600px]:text-[6vw]"
-			style:--reveal={mode === 'gl' ? reveal : undefined}
+	<div class="art" data-intro>
+		<HeroArt />
+	</div>
+
+	<!-- One word in the DOM ("NODVIKING"); the box is a pseudo-element so the text isn't duplicated. -->
+	<h1 id="hero-title" class="wordmark font-display" aria-label={site.brand}>
+		<span bind:this={first} class="w1" data-intro aria-hidden="true">{heroWordmark.first}</span><span
+			bind:this={boxed}
+			class="w2"
+			data-intro
+			data-text={heroWordmark.boxed}
+			aria-hidden="true">{heroWordmark.boxed}</span
 		>
-			{#each aboutHeadline as line (line)}<span class="block">{line}</span>{/each}
-		</h2>
+	</h1>
+
+	<div class="foot">
+		<span class="rule" data-intro data-rule aria-hidden="true"></span>
+		<div class="max-w-[640px] text-[14px] leading-[1.6] md:text-[14.4px]">
+			<p data-intro data-line>{heroIntro[0]}</p>
+			<p class="mt-2 text-mute" data-intro data-line>{heroIntro[1]}</p>
+		</div>
+		<div class="w-full md:w-[320px]">
+			{#if site.available}
+				<p class="mb-3 flex items-center gap-3 text-[12px] text-mute" data-intro data-line>
+					<span class="tag-mark" aria-hidden="true"></span>{site.availability}.
+				</p>
+			{/if}
+			<div data-intro data-line>
+				<a
+					href={heroCta.href}
+					target="_blank"
+					rel="noopener noreferrer"
+					class="btn btn--lg w-full"
+					use:magnetic={{ strength: 0.12 }}
+				>
+					{heroCta.label} <span aria-hidden="true">↗</span>
+				</a>
+			</div>
+		</div>
 	</div>
 </section>
 
 <style>
 	.hero {
-		position: relative;
-		height: 260svh;
-	}
-	.hero-stage {
-		position: sticky;
-		top: 0;
-		height: 100svh;
-		overflow: hidden;
-	}
-	.hero-canvas {
-		position: absolute;
-		inset: 0;
-		width: 100%;
-		height: 100%;
-		pointer-events: none;
-	}
-
-	/* Wordmark: the only glowing element on the site. Soft, small. */
-	.hero-title {
-		position: relative;
-		color: var(--color-accent);
-		text-shadow: var(--glow-hero);
-	}
-	.is-gl .hero-title {
-		color: transparent;
-		text-shadow: none;
-	}
-
-	/* About headline sits in the last viewport; in gl mode it fades in crisp as the particles finish forming. */
-	.about-frame {
-		position: absolute;
-		inset-inline: 0;
-		bottom: 0;
-		height: 100svh;
-		display: grid;
-		place-items: center;
-		text-align: center;
-		pointer-events: none;
-	}
-	.about-title {
-		--reveal: 0;
-		color: rgb(47 107 255 / var(--reveal));
-	}
-
-	/* Static mode (reduced motion / no WebGL): everything in normal flow. */
-	.is-static {
-		height: auto;
-	}
-	.is-static .hero-stage {
-		position: relative;
-	}
-	.is-static .about-frame {
-		position: relative;
-		height: auto;
-		min-height: 70svh;
-	}
-	.is-static .about-title {
-		--reveal: 1;
-	}
-	@media (prefers-reduced-motion: reduce) {
-		.hero {
-			height: auto;
-		}
-		.hero-stage {
-			position: relative;
-		}
-		.about-frame {
-			position: relative;
-			height: auto;
-			min-height: 70svh;
-		}
-		.about-title {
-			--reveal: 1;
-		}
-	}
-
-	/* Intro: supporting copy rises in after the preloader. */
-	.hero-in {
-		opacity: 0;
-		translate: 0 14px;
-		transition:
-			opacity 1.1s var(--ease-expo) 0.9s,
-			translate 1.1s var(--ease-expo) 0.9s;
-	}
-	.is-in .hero-in {
-		opacity: 1;
-		translate: 0 0;
-	}
-
-	/* Cursor lens: hidden code layer, masked to a circle around the pointer. */
-	.lens-wrap {
-		--mx: -999px;
-		--my: -999px;
-		--lr: 0px;
-		position: absolute;
-		inset: 0;
-		pointer-events: none;
-	}
-	.lens {
-		position: absolute;
-		inset: 0;
-		padding: 5.5rem var(--gutter) 0;
-		font-family: var(--font-mono);
-		font-size: 12px;
-		line-height: 2;
-		white-space: nowrap;
-		color: rgb(91 140 255 / 0.72);
-		pointer-events: none;
-		user-select: none;
-		-webkit-mask-image: radial-gradient(
-			circle var(--lr) at var(--mx) var(--my),
-			#000 40%,
-			transparent 100%
-		);
-		mask-image: radial-gradient(circle var(--lr) at var(--mx) var(--my), #000 40%, transparent 100%);
-	}
-	/* Edge-only chromatic split, 1px. Subtle on purpose. */
-	.lens-split {
-		color: transparent;
-		text-shadow:
-			-1px 0 rgb(255 70 110 / 0.55),
-			1px 0 rgb(80 220 255 / 0.6);
-		-webkit-mask-image: radial-gradient(
-			circle var(--lr) at var(--mx) var(--my),
-			transparent 68%,
-			#000 86%,
-			transparent 100%
-		);
-		mask-image: radial-gradient(
-			circle var(--lr) at var(--mx) var(--my),
-			transparent 68%,
-			#000 86%,
-			transparent 100%
-		);
-	}
-
-	/* Transition wipe bars (gl mode only; transforms are scroll-driven). */
-	.bars {
-		position: absolute;
-		top: 0;
-		bottom: 0;
-		left: 0;
-		width: 120%;
-		display: none;
-		justify-content: space-between;
-		pointer-events: none;
-		transform: translate3d(100%, 0, 0);
-		will-change: transform;
-	}
-	.is-gl .bars {
 		display: flex;
-	}
-	.bars span {
-		width: 4vw;
-		height: 100%;
-		background: var(--color-accent);
+		flex-direction: column;
+		min-height: 100svh;
+		padding: calc(var(--nav-h) + 16px) var(--gutter) clamp(24px, 4.5vh, 40px);
 	}
 
-	.lens-ring {
+	/* The art takes whatever space is left, so the hero always fits one screen. */
+	.art {
+		position: relative;
+		flex: 1;
+		min-height: 120px;
+		margin-block: clamp(0.75rem, 3vh, 2.5rem);
+	}
+	.art :global(svg) {
+		position: absolute;
+		inset: 0;
+		margin: auto;
+		max-width: 620px;
+		max-height: 420px;
+	}
+
+	.wordmark {
+		margin-top: auto;
+		text-align: center;
+		white-space: nowrap;
+		font-size: min(15vw, 22svh, 13.5rem);
+		line-height: 0.9;
+		color: var(--color-accent);
+	}
+	.w1,
+	.w2 {
+		display: inline-block;
+	}
+	/* VIKING sits in a solid blue box with dark text; the box is drawn by ::after and wiped in via --box-r. */
+	.w2 {
+		--box-r: 0%;
+		position: relative;
+		margin-left: 0.14em;
+		padding: 0 0.06em 0 0.05em;
+	}
+	.w2::after {
+		content: attr(data-text);
+		position: absolute;
+		inset: 0;
+		padding: inherit;
+		background: var(--color-accent);
+		color: var(--color-ink);
+		clip-path: inset(0 var(--box-r) 0 0);
+	}
+
+	.foot {
+		position: relative;
+		display: grid;
+		gap: 1.5rem;
+		margin-top: clamp(1.25rem, 3vh, 2rem);
+		padding-top: 1.35rem;
+	}
+	@media (min-width: 768px) {
+		.foot {
+			grid-template-columns: 1fr auto;
+			align-items: end;
+		}
+	}
+	.rule {
 		position: absolute;
 		top: 0;
 		left: 0;
-		width: 0;
-		height: 0;
-		border-radius: 999px;
-		border: 1px solid rgb(91 140 255 / 0.4);
-		box-shadow: 0 0 10px rgb(47 107 255 / 0.18);
-		pointer-events: none;
+		right: 0;
+		height: 1px;
+		background: var(--color-line);
 	}
 
-	.scroll-cue {
-		flex-direction: column;
-		align-items: center;
-		gap: 0.6rem;
+	/* Hidden until the intro runs (only when JS + motion are on; see the inline script in app.html). */
+	:global(html.nv-anim) .hero:not(.is-played) [data-intro] {
+		visibility: hidden;
 	}
-	.cue-line {
-		width: 1px;
-		height: 42px;
-		background: linear-gradient(to bottom, var(--color-accent-soft), transparent);
-		transform-origin: top;
-		animation: cue 2.2s var(--ease-quart-in-out) infinite;
-	}
-	@keyframes cue {
-		0% {
-			transform: scaleY(0);
-			transform-origin: top;
-		}
-		45% {
-			transform: scaleY(1);
-			transform-origin: top;
-		}
-		55% {
-			transform: scaleY(1);
-			transform-origin: bottom;
-		}
-		100% {
-			transform: scaleY(0);
-			transform-origin: bottom;
-		}
+	:global(html.nv-anim) .hero:not(.is-played) .w2 {
+		--box-r: 100%;
 	}
 </style>

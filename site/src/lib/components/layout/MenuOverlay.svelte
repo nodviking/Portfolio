@@ -103,8 +103,9 @@
 	inert={!motion.menuOpen}
 	data-lenis-prevent
 >
-	<div class="flex justify-end px-[var(--gutter)] pt-5 md:pt-7">
-		<button type="button" class="pill" onclick={() => onclose()} use:magnetic>Close</button>
+	<div class="flex h-[var(--nav-h)] items-center justify-between px-[var(--gutter)]">
+		<span class="caps text-mute">/* menu */</span>
+		<button type="button" class="tag" onclick={() => onclose()} use:magnetic>Close ✕</button>
 	</div>
 
 	<nav aria-label="Primary" class="flex flex-1 items-center justify-center">
@@ -117,11 +118,11 @@
 						class="group flex items-baseline gap-3 md:gap-5"
 						onclick={(e) => go(e, link.href)}
 					>
-						<span class="caps text-mute tabular-nums" aria-hidden="true"
+						<span class="index-tag tabular-nums" aria-hidden="true"
 							>{String(i + 1).padStart(2, '0')}</span
 						>
 						<span
-							class="font-display text-[clamp(2.4rem,8.4vw,7rem)] leading-[0.98] text-paper uppercase transition-colors duration-500 ease-[var(--ease-expo)] group-hover:text-accent group-focus-visible:text-accent"
+							class="font-display text-[clamp(2.6rem,9vw,6.5rem)] text-paper transition-colors duration-300 group-hover:text-accent group-focus-visible:text-accent"
 							>{link.label}</span
 						>
 					</a>
@@ -132,9 +133,9 @@
 
 	<div
 		data-menu-fade
-		class="grid gap-6 px-[var(--gutter)] pb-6 md:grid-cols-3 md:items-end md:pb-8"
+		class="mx-[var(--gutter)] grid gap-6 border-t border-line pt-5 pb-6 md:grid-cols-3 md:items-end md:pb-8"
 	>
-		<div class="caps flex flex-col gap-1 text-paper/80">
+		<div class="caps flex flex-col gap-1 text-mute">
 			<a class="w-fit hover:text-paper" href="mailto:{site.email}">{site.email}</a>
 			<a
 				class="inline-flex w-fit items-center gap-1 hover:text-paper"
@@ -144,11 +145,10 @@
 				>Design portfolio <Icon name="arrow-up-right" size={12} /></a
 			>
 		</div>
-		<p class="caps flex items-center gap-2 text-paper/80 md:justify-center">
-			{#if site.available}<span class="size-1.5 rounded-full bg-accent" aria-hidden="true"
-				></span>{site.availability}{/if}
+		<p class="caps flex items-center gap-3 text-mute md:justify-center">
+			{#if site.available}<span class="tag-mark" aria-hidden="true"></span>{site.availability}{/if}
 		</p>
-		<div class="caps flex items-center justify-between gap-4 text-paper/80 md:justify-end">
+		<div class="caps flex items-center justify-between gap-4 text-mute md:justify-end">
 			<LocalTime />
 			<Socials />
 		</div>

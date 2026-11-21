@@ -13,21 +13,21 @@
 
 <footer class="relative px-[var(--gutter)] pt-24 pb-6 md:pt-32 md:pb-8">
 	<p
-		class="text-accent text-center font-display text-[10.6vw] leading-[0.9] uppercase select-none"
+		class="text-center font-display text-[17vw] text-accent select-none"
 		aria-hidden="true"
 	>
 		nodviking
 	</p>
 
 	<div
-		class="caps mt-10 grid grid-cols-2 items-center gap-y-4 text-paper/75 md:mt-14 md:grid-cols-4"
+		class="caps mt-10 grid grid-cols-2 items-center gap-y-4 border-t border-line pt-5 text-mute md:mt-14 md:grid-cols-4"
 	>
 		<p>© {site.copyrightYear} {site.realName}</p>
 		<p class="justify-self-end md:justify-self-center"><LocalTime /></p>
 		<Socials class="md:justify-self-center" />
 		<button
 			type="button"
-			class="pill justify-self-end"
+			class="tag justify-self-end"
 			onclick={toTop}
 			use:magnetic
 			aria-label="Back to top"

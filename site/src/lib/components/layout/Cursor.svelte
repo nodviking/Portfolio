@@ -122,7 +122,6 @@
 		width: 64px;
 		height: 64px;
 		border-color: var(--color-accent-soft);
-		box-shadow: 0 0 10px rgb(47 107 255 / 0.25);
 	}
 	.ring.label {
 		width: 92px;

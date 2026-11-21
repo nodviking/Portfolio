@@ -6,18 +6,20 @@
 		<meta name="text-scale" content="scale" />
 		<script>
 			// Decide before first paint whether the intro plays, so repeat visits never flash it.
-			try {
-				if (
-					sessionStorage.getItem('nv-intro') ||
-					matchMedia('(prefers-reduced-motion: reduce)').matches
-				) {
-					document.documentElement.dataset.intro = 'skip';
+			// `nv-anim` marks "JS + motion allowed": hero elements stay hidden until their intro runs.
+			(function () {
+				var d = document.documentElement;
+				var reduced = false;
+				try {
+					reduced = matchMedia('(prefers-reduced-motion: reduce)').matches;
+					if (sessionStorage.getItem('nv-intro') || reduced) d.dataset.intro = 'skip';
+				} catch (e) {
+					d.dataset.intro = 'skip';
 				}
-			} catch (e) {
-				document.documentElement.dataset.intro = 'skip';
-			}
+				if (!reduced) d.classList.add('nv-anim');
+			})();
 		</script>
-		<noscript><style>.preloader{display:none!important}.hero{height:auto!important}.hero-stage{position:relative!important}.about-frame{position:relative!important;height:auto!important}.about-title{--reveal:1!important}.hero-in{opacity:1!important;translate:none!important}</style></noscript>
+		<noscript><style>.preloader{display:none!important}</style></noscript>
 		%sveltekit.head%
 	</head>
 	<body data-sveltekit-preload-data="hover">
