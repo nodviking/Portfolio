@@ -166,15 +166,13 @@
 	.hero {
 		display: flex;
 		flex-direction: column;
-		min-height: 100svh;
 		padding: calc(var(--nav-h) + 16px) var(--gutter) clamp(24px, 4vh, 40px);
 	}
 
-	/* Bottom-anchored: the wordmark block sits on the divider; the space above absorbs extra height. */
+	/* Wordmark block sits a short, fixed distance below the nav. */
 	.wm-wrap {
 		container-type: inline-size;
-		margin-top: auto;
-		padding-top: clamp(3rem, 10vh, 8rem);
+		margin-top: clamp(1.5rem, 5vh, 3.5rem);
 	}
 
 	.annos {
