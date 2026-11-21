@@ -59,7 +59,7 @@
 					<p class="caps mb-2 text-[11px] text-mute">{displayDates(e.dates)}</p>
 				{/if}
 				<h3 class="font-display text-[clamp(1.5rem,3.4vw,3rem)] text-paper">{e.role}</h3>
-				<p class="caps mt-3 text-accent">{e.org}</p>
+				<p class="caps mt-3 text-accent-ink">{e.org}</p>
 				{#if e.body}
 					<p class="mt-4 max-w-[60ch] text-[14px] leading-[1.65] text-mute md:text-[15px]" use:lines>
 						{e.body}
@@ -89,7 +89,7 @@
 		}
 	}
 	.node.is-on {
-		background: var(--color-accent);
-		border-color: var(--color-accent);
+		background: var(--color-accent-ink);
+		border-color: var(--color-accent-ink);
 	}
 </style>

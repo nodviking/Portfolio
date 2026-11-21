@@ -124,7 +124,7 @@
 		height: 6px;
 		left: -3px;
 		top: -3px;
-		background: var(--color-accent);
+		background: var(--color-accent-ink);
 		transition: transform 0.3s var(--ease-expo);
 	}
 	.tick {
@@ -191,7 +191,7 @@
 		position: absolute;
 		width: 8px;
 		height: 8px;
-		border-color: var(--color-accent);
+		border-color: var(--color-accent-ink);
 		border-style: solid;
 		border-width: 0;
 	}

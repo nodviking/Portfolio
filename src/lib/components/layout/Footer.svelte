@@ -53,11 +53,11 @@
 			<p class="mt-2 text-[13px] text-mute">Design. Build. Ship.</p>
 		</div>
 		<div>
-			<p class="caps mb-3 text-[10px] text-accent">Follow me on</p>
+			<p class="caps mb-3 text-[10px] text-accent-ink">Follow me on</p>
 			<ul class="grid gap-1.5 text-[13px]">
 				{#each follow as l (l.href)}
 					<li>
-						<a class="text-paper hover:text-accent" href={l.href} target="_blank" rel="noopener noreferrer"
+						<a class="text-paper hover:text-accent-ink" href={l.href} target="_blank" rel="noopener noreferrer"
 							><span>{l.label}</span> <span aria-hidden="true" data-no-scramble>↗</span></a
 						>
 					</li>
@@ -65,13 +65,13 @@
 			</ul>
 		</div>
 		<div>
-			<p class="caps mb-3 text-[10px] text-accent">Contact me at</p>
-			<a class="text-[13px] text-paper underline underline-offset-4 hover:text-accent" href="mailto:{site.email}"
+			<p class="caps mb-3 text-[10px] text-accent-ink">Contact me at</p>
+			<a class="text-[13px] text-paper underline underline-offset-4 hover:text-accent-ink" href="mailto:{site.email}"
 				><span>{site.email}</span></a
 			>
 		</div>
 		<div>
-			<p class="caps mb-3 text-[10px] text-accent">Based in</p>
+			<p class="caps mb-3 text-[10px] text-accent-ink">Based in</p>
 			<p class="text-[13px] text-paper">{site.location}</p>
 			<p class="mt-1 text-[13px] text-mute"><LocalTime /></p>
 		</div>
@@ -97,7 +97,7 @@
 		<p class="hidden md:block">Built with SvelteKit + GSAP</p>
 		<button
 			type="button"
-			class="justify-self-end text-paper transition-colors hover:text-accent"
+			class="justify-self-end text-paper transition-colors hover:text-accent-ink"
 			onclick={toTop}
 			use:magnetic={{ strength: 0.3 }}
 			aria-label="Back to top"

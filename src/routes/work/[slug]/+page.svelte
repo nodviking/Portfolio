@@ -30,7 +30,7 @@
 {#key c.slug}
 	<article data-section="04" class="section pt-[calc(var(--nav-h)+3rem)]" aria-labelledby="case-title">
 		<div class="mb-10 flex items-center gap-4">
-			<a href="/#work" class="caps text-mute hover:text-accent"><span>← All work</span></a>
+			<a href="/#work" class="caps text-mute hover:text-accent-ink"><span>← All work</span></a>
 			<span class="h-px flex-1 bg-line" aria-hidden="true"></span>
 			<p class="index-tag shrink-0">[04] / CLIENTS.LOG / {pad(data.index + 1)}</p>
 		</div>

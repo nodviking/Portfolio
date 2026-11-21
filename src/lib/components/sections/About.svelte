@@ -19,7 +19,7 @@
 	<div class="grid items-center gap-y-6 md:grid-cols-[1fr_auto_1fr] md:gap-x-[clamp(1.5rem,3vw,3.5rem)]">
 		<SpecimenCard card={specimenCards[0]} />
 		<span
-			class="justify-self-center font-display text-[clamp(3rem,5vw,4.5rem)] leading-none text-accent"
+			class="justify-self-center font-display text-[clamp(3rem,5vw,4.5rem)] leading-none text-accent-display"
 			aria-hidden="true">+</span
 		>
 		<SpecimenCard card={specimenCards[1]} delay={0.15} />

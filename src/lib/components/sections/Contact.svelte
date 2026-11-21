@@ -129,7 +129,7 @@
 	.wordmark {
 		white-space: nowrap;
 		line-height: 0.9;
-		color: var(--color-accent);
+		color: var(--color-accent-display);
 		font-size: calc(100cqw / 5.7);
 	}
 	.w1,
@@ -161,10 +161,10 @@
 	}
 	.email:hover {
 		background: var(--color-accent);
-		--node-c: var(--color-ink);
+		--node-c: var(--color-on-accent);
 	}
 	.email:hover .email-label,
 	.email:hover .caps {
-		color: var(--color-ink);
+		color: var(--color-on-accent);
 	}
 </style>

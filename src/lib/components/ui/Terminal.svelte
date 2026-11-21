@@ -56,8 +56,8 @@
 	</p>
 	<pre class="term" aria-hidden="true"><code
 			>{#each terminal as l, i (i)}<span class="ln ln--{l.kind}" class:is-secret={l.secret}
-					>{#if l.kind === 'cmd' && lines[i].length > 0}<span class="text-accent">{lines[i].slice(0, 1)}</span
-						>{lines[i].slice(1)}{:else if l.kind === 'ok' && lines[i].length > 0}<span class="text-accent"
+					>{#if l.kind === 'cmd' && lines[i].length > 0}<span class="text-accent-ink">{lines[i].slice(0, 1)}</span
+						>{lines[i].slice(1)}{:else if l.kind === 'ok' && lines[i].length > 0}<span class="text-accent-ink"
 							>{lines[i].slice(0, 1)}</span
 						>{lines[i].slice(1)}{:else}{lines[i]}{/if}{#if i === cursorLine}<span class="caret"
 						></span>{/if}</span

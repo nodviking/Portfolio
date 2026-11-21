@@ -113,7 +113,7 @@
 			<SectionHead id="storeenv" />
 			<div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
 				<div>
-					<h2 id="storeenv-title" class="font-display text-[clamp(3rem,10vw,9rem)] text-accent" use:decode>{storeenv.title}</h2>
+					<h2 id="storeenv-title" class="font-display text-[clamp(3rem,10vw,9rem)] text-accent-display" use:decode>{storeenv.title}</h2>
 					<p class="mt-3 text-[clamp(1.05rem,1.8vw,1.6rem)] font-medium text-paper">{storeenv.subtitle}</p>
 				</div>
 				<div class="flex flex-col gap-4 lg:items-end">
@@ -134,7 +134,7 @@
 				<div class="mb-3 flex items-center justify-between">
 					<p class="caps text-mute">Features</p>
 					<p class="caps hidden tabular-nums min-[900px]:block" aria-hidden="true">
-						<span class="text-accent">{pad(count)}</span>/{pad(features.length)}
+						<span class="text-accent-ink">{pad(count)}</span>/{pad(features.length)}
 					</p>
 				</div>
 				<div bind:this={track} class="track">

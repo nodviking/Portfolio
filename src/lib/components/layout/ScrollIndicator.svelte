@@ -47,7 +47,7 @@
 </script>
 
 <div class="track" aria-hidden="true"><div bind:this={bar} class="bar"></div></div>
-<p class="counter caps" aria-hidden="true"><span class="text-accent">{current}</span>/{total}</p>
+<p class="counter caps" aria-hidden="true"><span class="text-accent-ink">{current}</span>/{total}</p>
 
 <style>
 	.track {

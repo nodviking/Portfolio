@@ -137,7 +137,7 @@
 		text-indent: -2ch;
 	}
 	.k {
-		color: var(--color-accent);
+		color: var(--color-accent-ink);
 	}
 	.v {
 		color: var(--color-paper);

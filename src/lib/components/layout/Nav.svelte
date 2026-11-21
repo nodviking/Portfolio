@@ -100,7 +100,7 @@
 							<b
 								class={[
 									'text-[10px] font-black transition-colors duration-300',
-									active === id ? 'text-accent' : 'text-mute'
+									active === id ? 'text-accent-ink' : 'text-mute'
 								]}>{String(i + 1).padStart(2, '0')}</b
 							><span>{link.label}</span>
 						</a>

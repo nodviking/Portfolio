@@ -125,7 +125,7 @@
 						<span
 							data-menu-label
 							data-text={link.label}
-							class="font-display text-[clamp(2rem,7vw,5rem)] text-paper transition-colors duration-200 group-hover:text-accent group-focus-visible:text-accent"
+							class="font-display text-[clamp(2rem,7vw,5rem)] text-paper transition-colors duration-200 group-hover:text-accent-ink group-focus-visible:text-accent-ink"
 							>{link.label}</span
 						>
 					</a>
@@ -136,9 +136,9 @@
 
 	<div class="mx-[var(--gutter)] grid gap-5 border-t border-line pt-5 pb-6 md:grid-cols-3 md:items-end md:pb-8">
 		<div class="caps flex flex-col gap-1 text-mute">
-			<a class="w-fit hover:text-accent" href="mailto:{site.email}"><span>{site.email}</span></a>
+			<a class="w-fit hover:text-accent-ink" href="mailto:{site.email}"><span>{site.email}</span></a>
 			<a
-				class="inline-flex w-fit items-center gap-1 hover:text-accent"
+				class="inline-flex w-fit items-center gap-1 hover:text-accent-ink"
 				href={site.designPortfolio}
 				target="_blank"
 				rel="noopener noreferrer"><span>Design portfolio</span> <Icon name="arrow-up-right" size={12} /></a

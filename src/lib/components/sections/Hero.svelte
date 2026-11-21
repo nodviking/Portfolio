@@ -190,7 +190,7 @@
 			<p data-intro data-line>{heroIntro[0]}</p>
 			<p class="mt-2 text-mute" data-intro data-line>{heroIntro[1]}</p>
 		</div>
-		<a href="#about" class="caps self-end text-paper hover:text-accent" data-intro data-line>
+		<a href="#about" class="caps self-end text-paper hover:text-accent-ink" data-intro data-line>
 			<span>[ Scroll ↓ ]</span>
 		</a>
 	</div>
@@ -304,7 +304,7 @@
 	.wordmark {
 		white-space: nowrap;
 		line-height: 0.9;
-		color: var(--color-accent);
+		color: var(--color-accent-display);
 		/* NOD (1.62em) + gap (0.14em) + VIKING box (3.24em + 0.11em padding) = 5.11em */
 		font-size: calc(100cqw / 5.13);
 	}

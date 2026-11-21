@@ -51,7 +51,7 @@
 								>{#each Array.from({ length: STRIP }, (_, j) => j % 10) as d, j (j)}<span>{d}</span>{/each}</span
 							></span
 						>
-					{/each}{#if n.suffix}<span class="text-accent" aria-hidden="true">{n.suffix}</span>{/if}
+					{/each}{#if n.suffix}<span class="text-accent-display" aria-hidden="true">{n.suffix}</span>{/if}
 				</dd>
 			</div>
 		{/each}

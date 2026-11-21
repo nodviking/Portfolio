@@ -41,11 +41,11 @@
 	.card:hover,
 	.card:focus-visible {
 		background: var(--color-accent);
-		color: var(--color-ink);
-		--node-c: var(--color-ink);
+		color: var(--color-on-accent);
+		--node-c: var(--color-on-accent);
 	}
 	.card:hover p,
 	.card:focus-visible p {
-		color: var(--color-ink);
+		color: var(--color-on-accent);
 	}
 </style>

@@ -30,7 +30,7 @@
 				<span class="boxword mt-1" data-text="QUESTIONS">Questions</span>
 			</h2>
 			<p class="mt-6 text-[13px] text-mute">
-				Still curious? <a class="text-paper underline underline-offset-4 hover:text-accent" href="mailto:{site.email}"
+				Still curious? <a class="text-paper underline underline-offset-4 hover:text-accent-ink" href="mailto:{site.email}"
 					><span>Email me</span></a
 				>
 			</p>
@@ -79,7 +79,7 @@
 	}
 	.row:hover .plus,
 	.row:focus-visible .plus {
-		color: var(--color-accent);
+		color: var(--color-accent-ink);
 	}
 	.plus {
 		font-size: 1.4rem;
@@ -91,6 +91,6 @@
 	}
 	.plus.is-open {
 		transform: rotate(45deg);
-		color: var(--color-accent);
+		color: var(--color-accent-ink);
 	}
 </style>

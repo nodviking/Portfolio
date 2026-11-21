@@ -150,7 +150,7 @@
 		grid-column: 3;
 		grid-row: 1;
 		font-size: 1.4rem;
-		color: var(--color-accent);
+		color: var(--color-accent-ink);
 	}
 	@media (min-width: 900px) {
 		.row {
@@ -178,7 +178,7 @@
 		.row:hover .row-year,
 		.row:hover .row-arrow,
 		.row:hover .row-idx {
-			color: var(--color-ink);
+			color: var(--color-on-accent);
 		}
 	}
 

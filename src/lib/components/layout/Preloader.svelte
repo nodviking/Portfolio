@@ -110,11 +110,11 @@
 				<div class="text-[11px] leading-[1.75] md:text-[12px]">
 					{#each all as line, i (i)}
 						<p class="flex min-h-[1.75em] justify-between gap-6 whitespace-nowrap">
-							<span class={line.status ? 'text-paper' : 'text-accent'}
+							<span class={line.status ? 'text-paper' : 'text-accent-ink'}
 								>{typed[i]}{#if !done[i] && typed[i].length > 0}<span class="caret"></span>{/if}</span
 							>
 							{#if line.status && done[i]}
-								<span class={line.status === 'OK' ? 'text-paper' : 'text-accent'}>[ {line.status} ]</span>
+								<span class={line.status === 'OK' ? 'text-paper' : 'text-accent-ink'}>[ {line.status} ]</span>
 							{/if}
 						</p>
 					{/each}
@@ -122,14 +122,14 @@
 				<div class="mt-5 h-[3px] bg-line">
 					<div bind:this={bar} class="h-full origin-left bg-accent" style="transform: scaleX(0)"></div>
 				</div>
-				<div class="caps mt-2 flex justify-between text-[10px] text-accent">
+				<div class="caps mt-2 flex justify-between text-[10px] text-accent-ink">
 					{#each bootLabels as l (l)}<span>{l}</span>{/each}
 				</div>
 			</div>
-			<p class="pct font-display text-accent tabular-nums">{String(count).padStart(3, '0')}%</p>
+			<p class="pct font-display text-accent-display tabular-nums">{String(count).padStart(3, '0')}%</p>
 		{:else if stage === 'mark'}
 			<p class="absolute inset-0 grid place-items-center">
-				<span class="font-display text-[clamp(1.6rem,3.4vw,2.6rem)] text-accent"
+				<span class="font-display text-[clamp(1.6rem,3.4vw,2.6rem)] text-accent-display"
 					>NOD<span bind:this={box} class="boxword ml-[0.14em]" data-text="VIKING" style="--box-r:100%"
 						>VIKING</span
 					></span

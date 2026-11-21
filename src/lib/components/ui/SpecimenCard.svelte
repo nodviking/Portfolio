@@ -91,7 +91,7 @@
 					x2={W}
 					y1={l.y}
 					y2={l.y}
-					stroke={l.accent ? 'var(--color-accent)' : '#333'}
+					stroke={l.accent ? 'var(--color-accent-ink)' : '#333'}
 					stroke-width={l.accent ? 4 : 3}
 				/>
 				<text data-lbl x="0" y={l.y - 22} class="lbl">
@@ -128,7 +128,7 @@
 					<path
 						data-cross
 						d="M{x - 20} {y}H{x + 20}M{x} {y - 20}V{y + 20}"
-						stroke="var(--color-accent)"
+						stroke="var(--color-accent-ink)"
 						stroke-width="5"
 					/>
 				{/each}
@@ -152,7 +152,7 @@
 
 	<div class="px-[clamp(18px,3.4vw,52px)] pt-[clamp(28px,4vw,56px)] pb-[clamp(26px,3.6vw,48px)]">
 		<p class="text-[13px] font-extrabold tracking-[0.01em] text-paper md:text-[14px]">
-			{card.tag.before}<span class="text-accent">{card.tag.accent}</span>{card.tag.after}
+			{card.tag.before}<span class="text-accent-ink">{card.tag.accent}</span>{card.tag.after}
 		</p>
 		<h3 class="mt-3 font-display text-[clamp(2.6rem,6vw,4.8rem)] text-paper" use:decode={{ delay: delay + 0.6 }}>{card.title}</h3>
 		<p class="mt-5 max-w-[46ch] text-[14px] leading-[1.65] text-mute md:text-[15px]">{card.body}</p>
@@ -181,7 +181,7 @@
 		font-weight: 800;
 	}
 	.glyph--solid {
-		fill: var(--color-accent);
+		fill: var(--color-accent-display);
 	}
 	.glyph--light {
 		fill: var(--color-paper);

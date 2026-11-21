@@ -51,7 +51,7 @@
 	{#if motion.reduced}
 		<div class="grid gap-2 px-[var(--gutter)] py-24">
 			{#each scrollWords as w (w)}
-				<p class="font-display text-[clamp(3rem,14vw,12rem)] text-accent">{w}</p>
+				<p class="font-display text-[clamp(3rem,14vw,12rem)] text-accent-display">{w}</p>
 			{/each}
 		</div>
 	{:else}
@@ -61,7 +61,7 @@
 			{/key}
 			<span class="block-cursor" aria-hidden="true"></span>
 			<p class="caps counter" aria-hidden="true">
-				<span class="text-accent">{String(index + 1).padStart(2, '0')}</span>/{String(scrollWords.length).padStart(2, '0')}
+				<span class="text-accent-ink">{String(index + 1).padStart(2, '0')}</span>/{String(scrollWords.length).padStart(2, '0')}
 			</p>
 		</div>
 	{/if}

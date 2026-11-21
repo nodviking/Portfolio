@@ -79,7 +79,7 @@
 		stroke-dashoffset: 0;
 	}
 	.d.a {
-		stroke: var(--color-accent);
+		stroke: var(--color-accent-ink);
 	}
 	.d.dash {
 		stroke-dasharray: 0.04 0.03;
