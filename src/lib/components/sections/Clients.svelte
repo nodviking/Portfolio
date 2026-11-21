@@ -105,9 +105,6 @@
 		{/each}
 	</ol>
 
-	<p class="mt-6 max-w-[60ch] text-[14px] leading-[1.6] text-mute" use:lines>
-		Fully custom, personalised websites. Design and development by me, no templates.
-	</p>
 
 	{#if motion.finePointer}
 		<div bind:this={preview} class="preview frame" aria-hidden="true">

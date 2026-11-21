@@ -155,7 +155,6 @@
 			{card.tag.before}<span class="text-accent-ink">{card.tag.accent}</span>{card.tag.after}
 		</p>
 		<h3 class="mt-3 font-display text-[clamp(2.6rem,6vw,4.8rem)] text-paper" use:decode={{ delay: delay + 0.6 }}>{card.title}</h3>
-		<p class="mt-5 max-w-[46ch] text-[14px] leading-[1.65] text-mute md:text-[15px]">{card.body}</p>
 	</div>
 </article>
 

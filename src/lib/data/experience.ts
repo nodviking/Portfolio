@@ -12,19 +12,19 @@ export const experience: ExperienceItem[] = [
 		role: 'Creator & Developer',
 		org: 'StoreEnv',
 		dates: 'TODO: year – present',
-		body: 'Designed and built an encrypted, versioned .env manager solo: CLI, encryption library, web app, VS Code extension.'
+		body: 'Encrypted .env manager: CLI, web app, VS Code extension.'
 	},
 	{
 		role: 'Freelance Web Designer & Developer',
 		org: 'Independent',
 		dates: 'TODO: year – present',
-		body: '5 clients, 5 custom websites shipped, including a full admin dashboard. Clients include Nanté Patisserie, ADC by Dr. Sanjana and Savora Hospitality.'
+		body: '5 custom websites shipped, one with a full admin dashboard.'
 	},
 	{
 		role: 'Freelance Graphic Designer',
 		org: 'Independent',
 		dates: 'TODO: years',
-		body: '80+ clients, 250+ projects: brand identities, social creatives and high-impact thumbnails.'
+		body: '80+ clients, 250+ projects: brands, thumbnails, social.'
 	},
 	{
 		role: 'B.Tech, Information Technology',

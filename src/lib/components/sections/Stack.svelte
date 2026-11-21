@@ -114,9 +114,6 @@
 					</div>
 				</div>
 			{/each}
-			<p class="mt-4 text-[13px] leading-[1.6] text-mute">
-				Hover a tag to find it everywhere. Rows speed up with your scroll.
-			</p>
 		</div>
 	</div>
 </section>

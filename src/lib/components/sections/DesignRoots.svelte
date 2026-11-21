@@ -21,8 +21,7 @@
 		<CurvedGallery items={square} dir={-1} height={170} />
 	</div>
 
-	<div class="mt-10 flex flex-wrap items-center justify-between gap-6 px-[var(--gutter)]">
-		<p class="max-w-[52ch] text-[15px] leading-[1.6] text-mute">{designRoots.body}</p>
+	<div class="mt-10 flex justify-end px-[var(--gutter)]">
 		<a
 			href={site.designPortfolio}
 			target="_blank"

@@ -21,7 +21,7 @@
 	let termBox: HTMLDivElement;
 
 	let progress = $state(0);
-	let termProgress = $state(0.14);
+	let termProgress = $state(0.08);
 	const count = $derived(Math.min(features.length, Math.floor(progress * features.length) + 1));
 	const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -64,7 +64,7 @@
 					onUpdate: (self) => {
 						progress = self.progress;
 						// Start with the first command already typed so the terminal is never an empty box.
-						termProgress = 0.14 + self.progress * 0.86;
+						termProgress = 0.08 + self.progress * 0.92;
 					},
 					onRefresh: () => ((window as Window & { __nvStoreenvLen?: number }).__nvStoreenvLen = len())
 				}
@@ -99,7 +99,7 @@
 				start: 'top 80%',
 				once: true,
 				onEnter: () =>
-					gsap.to(o, { p: 1, duration: 5.5, ease: 'none', onUpdate: () => (termProgress = 0.14 + o.p * 0.86) })
+					gsap.to(o, { p: 1, duration: 5.5, ease: 'none', onUpdate: () => (termProgress = 0.08 + o.p * 0.92) })
 			});
 			progress = 1;
 		});
@@ -115,10 +115,11 @@
 			<div class="grid gap-6 lg:grid-cols-[1fr_auto] lg:items-end">
 				<div>
 					<h2 id="storeenv-title" class="font-display text-[clamp(3rem,10vw,9rem)] text-accent-display" use:decode>{storeenv.title}</h2>
-					<p class="mt-3 text-[clamp(1.05rem,1.8vw,1.6rem)] font-medium text-paper">{storeenv.subtitle}</p>
+					<p class="mt-3 text-[clamp(1.05rem,1.8vw,1.6rem)] font-medium text-paper">
+						{storeenv.subtitle} <span class="text-mute">{storeenv.role}.</span>
+					</p>
 				</div>
 				<div class="flex flex-col gap-4 lg:items-end">
-					<p class="tag w-fit"><span class="tag-mark" aria-hidden="true"></span><span>{storeenv.role}</span></p>
 					<div class="flex flex-wrap gap-3">
 						{#each storeenv.links as l (l.href)}
 							<a class="btn" href={l.href} target="_blank" rel="noopener noreferrer" use:magnetic={{ strength: 0.2 }}>
@@ -132,9 +133,8 @@
 
 		<div class="body">
 			<div bind:this={viewport} class="viewport">
-				<div class="mb-3 flex items-center justify-between">
-					<p class="caps text-mute">Features</p>
-					<p class="caps hidden tabular-nums min-[900px]:block" aria-hidden="true">
+				<div class="mb-3 hidden justify-end min-[900px]:flex">
+					<p class="caps tabular-nums" aria-hidden="true">
 						<span class="text-accent-ink">{pad(count)}</span>/{pad(features.length)}
 					</p>
 				</div>
@@ -144,7 +144,6 @@
 							<span class="tab-label">{pad(i + 1)} / {f.title.toUpperCase().replaceAll(' ', '_')}</span>
 							<div class="dg"><Diagram kind={f.diagram} /></div>
 							<div class="mt-auto">
-								<p class="index-tag mb-2">{pad(i + 1)}/{pad(features.length)}</p>
 								<h3 class="font-display text-[clamp(1.6rem,2.4vw,2.4rem)] text-paper">{f.title}</h3>
 								<p class="mt-3 text-[13px] leading-[1.6] text-mute md:text-[14px]">{f.body}</p>
 							</div>

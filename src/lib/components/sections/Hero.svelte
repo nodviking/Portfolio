@@ -185,7 +185,6 @@
 			<p class="text-[clamp(1.15rem,2.1vw,1.75rem)] leading-[1.3] font-semibold tracking-[-0.02em]" data-intro data-line>
 				{heroIntro[0]}
 			</p>
-			<p class="mt-3 text-[14px] leading-[1.6] text-mute md:text-[15px]" data-intro data-line>{heroIntro[1]}</p>
 		</div>
 		<a href="#about" class="caps self-end text-paper hover:text-accent-ink" data-intro data-line>
 			<span>[ Scroll ↓ ]</span>

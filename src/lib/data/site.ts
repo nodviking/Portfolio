@@ -69,14 +69,14 @@ export interface SectionMeta {
 
 export const sections: SectionMeta[] = [
 	{ id: 'top', index: '01', file: 'INDEX.HTML', label: 'Home' },
-	{ id: 'about', index: '02', file: 'ABOUT.MD', label: 'About', lede: 'Graphic design first, then code. Now both, on every project.' },
+	{ id: 'about', index: '02', file: 'ABOUT.MD', label: 'About' },
 	{ id: 'storeenv', index: '03', file: 'STOREENV.CLI', label: 'StoreEnv' },
-	{ id: 'work', index: '04', file: 'CLIENTS.LOG', label: 'Client work', lede: 'Custom websites for real businesses, designed and built from scratch.' },
-	{ id: 'lab', index: '05', file: 'LAB.DIR', label: 'More builds', lede: 'Side projects and experiments.' },
-	{ id: 'experience', index: '06', file: 'HISTORY.TXT', label: 'Experience', lede: 'Where the work has come from so far.' },
-	{ id: 'stack', index: '07', file: 'STACK.JSON', label: 'Stack', lede: 'The tools I reach for, from Figma to FastAPI.' },
-	{ id: 'numbers', index: '08', file: 'STATS.LOG', label: 'Numbers', lede: 'The work so far, counted.' },
-	{ id: 'design', index: '09', file: 'DESIGN.ARCHIVE', label: 'Design roots', lede: 'Thumbnails, logos and brand identities from 250+ design projects. Drag the rows.' },
+	{ id: 'work', index: '04', file: 'CLIENTS.LOG', label: 'Client work' },
+	{ id: 'lab', index: '05', file: 'LAB.DIR', label: 'More builds' },
+	{ id: 'experience', index: '06', file: 'HISTORY.TXT', label: 'Experience' },
+	{ id: 'stack', index: '07', file: 'STACK.JSON', label: 'Stack' },
+	{ id: 'numbers', index: '08', file: 'STATS.LOG', label: 'Numbers' },
+	{ id: 'design', index: '09', file: 'DESIGN.ARCHIVE', label: 'Design roots' },
 	{ id: 'faq', index: '10', file: 'FAQ.MD', label: 'FAQ' },
 	{ id: 'contact', index: '11', file: 'CONTACT.SH', label: 'Contact' }
 ];

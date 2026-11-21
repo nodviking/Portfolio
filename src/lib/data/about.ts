@@ -5,7 +5,7 @@
  */
 
 export const aboutParagraph =
-	'nodviking is Tushar Kumar, a developer and designer from Delhi studying IT at Bhagwan Parshuram Institute of Technology. I started in graphic design (80+ clients, 250+ projects), then started building the products and websites myself.';
+	'nodviking is Tushar Kumar, a designer turned developer from Delhi. 250+ design projects first, now the products and websites too.';
 
 export interface SpecimenGlyph {
 	char: string;

@@ -40,8 +40,17 @@
 							<span class="blink mt-1 size-2 shrink-0 bg-accent"></span>
 						</div>
 						<h3 class="mt-10 font-display text-[clamp(2rem,4.4vw,3.6rem)] text-paper">{item.title}</h3>
+						{#if item.href}
+							<a
+								class="caps mt-3 inline-flex w-fit items-center gap-2 text-accent-ink hover:underline"
+								href={item.href}
+								target="_blank"
+								rel="noopener noreferrer"
+								><span>Play it live</span><span aria-hidden="true" data-no-scramble>↗</span></a
+							>
+						{/if}
 					</div>
-					<div class="flex flex-col md:justify-end">
+					<div class="mt-6 flex flex-col md:justify-end">
 						<p class="text-[15px] leading-[1.65] text-mute md:text-[16px]">{item.body}</p>
 						<ul class="mt-6 flex flex-wrap gap-2" aria-label="Built with">
 							{#each item.stack as s (s)}<li class="chip">{s}</li>{/each}

@@ -3,7 +3,7 @@
 export const storeenv = {
 	title: 'StoreEnv',
 	subtitle: 'Git for environment secrets.',
-	role: 'Solo project — design, engineering, everything',
+	role: 'Solo project',
 	links: [
 		{ label: 'storeenv.app', href: 'https://storeenv.app' },
 		{ label: 'CLI on GitHub', href: 'https://github.com/nodviking/storeenv-cli' }
@@ -19,36 +19,10 @@ export interface Feature {
 }
 
 export const features: Feature[] = [
-	{
-		title: 'Push / Pull',
-		body: 'Finds .env files in every service folder, encrypts them on your device, and restores them in the right place on another machine.',
-		diagram: 'pushpull'
-	},
-	{
-		title: 'Versioned',
-		body: 'Every push is a signed version with author and message. See which keys changed and roll back in one command.',
-		diagram: 'versions'
-	},
-	{
-		title: 'Selective sharing',
-		body: 'Share a whole environment or only specific keys, by email or username, with access that expires.',
-		diagram: 'sharing'
-	},
-	{
-		title: 'Run without files',
-		body: '`storeenv run` injects secrets straight into a process, so nothing is written to disk.',
-		diagram: 'run'
-	},
-	{
-		title: 'Zero-knowledge',
-		body: 'AES-256-GCM per secret, keys wrapped per person. The server only ever sees ciphertext.',
-		diagram: 'crypto'
-	},
-	{
-		title: 'Everywhere',
-		body: 'Single binary, Homebrew and npm · macOS, Linux, Windows · VS Code extension + web app.',
-		diagram: 'platforms'
-	}
+	{ title: 'Push / Pull', body: 'Sync .env files across machines.', diagram: 'pushpull' },
+	{ title: 'Versioned', body: 'Signed history. One-command rollback.', diagram: 'versions' },
+	{ title: 'Share keys', body: 'Per key, with access that expires.', diagram: 'sharing' },
+	{ title: 'Zero-knowledge', body: 'Encrypted on device. Server sees ciphertext.', diagram: 'crypto' }
 ];
 
 /**
@@ -63,17 +37,12 @@ export interface TermLine {
 
 export const terminal: TermLine[] = [
 	{ kind: 'cmd', text: '$ storeenv push' },
-	{ kind: 'dim', text: 'scanning ./api ./web ./worker' },
-	{ kind: 'out', text: 'found 3 .env files · 41 keys' },
 	{ kind: 'out', text: 'DATABASE_URL=postgres://app:••••@db.internal:5432/app', secret: true },
-	{ kind: 'ok', text: '✓ encrypted on device · AES-256-GCM' },
-	{ kind: 'ok', text: '✓ pushed v14 "rotate stripe key" (signed)' },
+	{ kind: 'ok', text: '✓ encrypted on device · pushed v14' },
 	{ kind: 'cmd', text: '$ storeenv pull' },
-	{ kind: 'out', text: 'restoring v14 → ./api/.env ./web/.env' },
-	{ kind: 'ok', text: '✓ 41 keys decrypted locally' },
+	{ kind: 'ok', text: '✓ 41 keys restored' },
 	{ kind: 'cmd', text: '$ storeenv run -- npm start' },
-	{ kind: 'dim', text: 'injecting 41 secrets · nothing written to disk' },
-	{ kind: 'ok', text: '✓ server listening on :3000' }
+	{ kind: 'ok', text: '✓ nothing written to disk' }
 ];
 
 /** What the secret line looks like as ciphertext. Same length, so the line never reflows. */
