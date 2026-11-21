@@ -48,3 +48,6 @@ export const specimenCards: SpecimenCard[] = [
 
 /** JetBrains Mono vertical metrics, in font units. */
 export const monoMetrics = { asc: 1020, cap: 730, x: 550, desc: -300, advance: 600 } as const;
+
+/** Pinned ASCII scene after About: one word at a time, scrubbed to scroll. */
+export const scrollWords = ['DESIGN.', 'BUILD.', 'SHIP.'];

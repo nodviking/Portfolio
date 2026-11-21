@@ -83,7 +83,7 @@
 	inert={motion.menuOpen}
 >
 	<div class="relative flex h-[var(--nav-h)] items-center justify-between px-[var(--gutter)]">
-		<a href="/" class="flex items-center" aria-label="nodviking, home" data-no-scramble>
+		<a href="/" class="flex items-center" data-no-scramble>
 			<NavWordmark />
 		</a>
 

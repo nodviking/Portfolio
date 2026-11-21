@@ -17,6 +17,15 @@
 		});
 	}
 
+	// Re-scramble when the parent link is hovered.
+	$effect(() => {
+		const link = el.closest('a');
+		if (!link) return;
+		const on = () => decode(0.8);
+		link.addEventListener('pointerenter', on);
+		return () => link.removeEventListener('pointerenter', on);
+	});
+
 	$effect(() => {
 		if (!motion.introDone) return;
 		decode(1.1);
@@ -27,6 +36,5 @@
 <span
 	bind:this={el}
 	class="text-[13px] leading-none font-extrabold tracking-[0.02em] text-paper uppercase"
-	aria-hidden="true"
-	onpointerenter={() => decode(0.8)}>{site.brand}</span
+	>{site.brand}</span
 >

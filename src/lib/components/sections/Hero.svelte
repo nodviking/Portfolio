@@ -1,6 +1,7 @@
 <script lang="ts">
 	import { EASE, gsap } from '#lib/animations/gsap.ts';
 	import { CIPHER, cipherOf, scrambleTo } from '#lib/animations/scramble.ts';
+	import AsciiCanvas from '#lib/ascii/AsciiCanvas.svelte';
 	import LocalTime from '#lib/components/ui/LocalTime.svelte';
 	import { heroIntro, heroWordmark } from '#lib/data/hero.ts';
 	import { site } from '#lib/data/site.ts';
@@ -20,10 +21,22 @@
 	let wordmark: HTMLHeadingElement;
 	let width = $state(0);
 	let played = $state(false);
+	/** ASCII version of the wordmark: assembles from noise, then hands over to the solid HTML wordmark. */
+	let asciiReveal = $state(0);
+	let asciiOn = $state(false);
+	let stacked = $state(false);
+	const asciiLines = $derived(
+		stacked
+			? [heroWordmark.first.toUpperCase(), heroWordmark.boxed.toUpperCase()]
+			: [`${heroWordmark.first} ${heroWordmark.boxed}`.toUpperCase()]
+	);
 
 	// Live pixel width for the dimension label.
 	$effect(() => {
-		const ro = new ResizeObserver(() => (width = Math.round(wordmark.getBoundingClientRect().width)));
+		const ro = new ResizeObserver(() => {
+			width = Math.round(wordmark.getBoundingClientRect().width);
+			stacked = wrap.clientWidth < 600;
+		});
 		ro.observe(wordmark);
 		return () => ro.disconnect();
 	});
@@ -49,9 +62,15 @@
 			el.textContent = cipherOf(el.dataset.text);
 		});
 
+		// 1. ASCII wordmark assembles out of noise (canvas), 2. the solid wordmark decodes in on top of it.
+		const asc = { r: 0 };
+		asciiOn = true;
+		const T = 1.05;
 		const tl = gsap
 			.timeline({ defaults: { ease: EASE.out } })
-			.set(q('[data-intro]'), { visibility: 'visible' })
+			.to(asc, { r: 1, duration: 1.1, ease: 'power2.out', onUpdate: () => (asciiReveal = asc.r) }, 0)
+			.set(q('[data-intro]'), { visibility: 'visible' }, T)
+			.call(() => (asciiOn = false), [], T + 0.35)
 			.to(
 				first,
 				{
@@ -59,7 +78,7 @@
 					ease: 'none',
 					scrambleText: { text: heroWordmark.first.toUpperCase(), chars: CIPHER, revealDelay: 0.2, speed: 0.9, tweenLength: false }
 				},
-				0.05
+				T + 0.05
 			)
 			.to(
 				boxed,
@@ -68,24 +87,25 @@
 					ease: 'none',
 					scrambleText: { text: heroWordmark.boxed.toUpperCase(), chars: CIPHER, revealDelay: 0.25, speed: 0.9, tweenLength: false }
 				},
-				0.2
+				T + 0.15
 			)
 			// Box wipes in from the left behind VIKING.
-			.fromTo(boxed, { '--box-r': '100%' }, { '--box-r': '0%', duration: 0.55, ease: 'power4.inOut' }, 0.95)
+			.fromTo(boxed, { '--box-r': '100%' }, { '--box-r': '0%', duration: 0.55, ease: 'power4.inOut' }, T + 0.75)
 			// Annotations: dimension line draws out from the centre, end ticks drop in, labels decode.
-			.fromTo(q('[data-dim-line]'), { scaleX: 0 }, { scaleX: 1, duration: 0.9 }, 1.1)
-			.fromTo(q('[data-dim-tick]'), { scaleY: 0 }, { scaleY: 1, duration: 0.4, stagger: 0.05 }, 1.35)
-			.add(() => annos.forEach((el, i) => scrambleTo(el, el.dataset.text, 0.6, i * 0.06)), 1.15)
-			.fromTo(q('[data-rule]'), { scaleX: 0 }, { scaleX: 1, duration: 1, transformOrigin: 'left center' }, 0.4)
+			.fromTo(q('[data-dim-line]'), { scaleX: 0 }, { scaleX: 1, duration: 0.9 }, T + 0.9)
+			.fromTo(q('[data-dim-tick]'), { scaleY: 0 }, { scaleY: 1, duration: 0.4, stagger: 0.05 }, T + 1.15)
+			.add(() => annos.forEach((el, i) => scrambleTo(el, el.dataset.text, 0.6, i * 0.06)), T + 0.95)
+			.fromTo(q('[data-rule]'), { scaleX: 0 }, { scaleX: 1, duration: 1, transformOrigin: 'left center' }, T + 0.2)
 			.fromTo(
 				q('[data-line]'),
 				{ clipPath: 'inset(0% 0% 100% 0%)', y: 14 },
 				{ clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 0.8, stagger: 0.07 },
-				0.6
+				T + 0.4
 			);
 
 		return () => {
 			tl.kill();
+			asciiOn = false;
 			first.textContent = heroWordmark.first;
 			boxed.textContent = heroWordmark.boxed;
 			annos.forEach((el) => (el.textContent = el.dataset.text ?? el.textContent));
@@ -124,6 +144,13 @@
 	class={['hero', played && 'is-played']}
 	aria-labelledby="hero-title"
 >
+	<!-- Ambient character field behind the hero; scrambles under the cursor. -->
+	{#if motion.finePointer && !motion.reduced}
+		<div class="dust" aria-hidden="true">
+			<AsciiCanvas lines={['']} dust={0.018} pointer cell={10} fps={20} defer />
+		</div>
+	{/if}
+
 	<div bind:this={wrap} class="wm-wrap">
 		<!-- Spec-drawing annotations -->
 		<div class="annos caps" aria-hidden="true">
@@ -139,6 +166,12 @@
 		</div>
 
 		<!-- One word in the DOM ("NODVIKING"); the box is a pseudo-element so the text isn't duplicated. -->
+		<div class="wm-box">
+		{#if asciiOn}
+			<div class="ascii" aria-hidden="true">
+				<AsciiCanvas lines={asciiLines} reveal={asciiReveal} cell={stacked ? 6 : 8} padX={0} padY={0.02} />
+			</div>
+		{/if}
 		<h1 bind:this={wordmark} id="hero-title" class="wordmark font-display" aria-label={site.brand}>
 			<span bind:this={first} class="w1" data-intro aria-hidden="true">{heroWordmark.first}</span><span
 				bind:this={boxed}
@@ -148,6 +181,7 @@
 				aria-hidden="true">{heroWordmark.boxed}</span
 			>
 		</h1>
+		</div>
 	</div>
 
 	<div class="foot">
@@ -175,6 +209,24 @@
 		margin-top: clamp(1.5rem, 5vh, 3.5rem);
 	}
 
+	.hero {
+		position: relative;
+	}
+	.dust {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		opacity: 0.55;
+	}
+	.wm-box {
+		position: relative;
+	}
+	.ascii {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
 	.annos {
 		display: flex;
 		justify-content: space-between;
@@ -186,7 +238,25 @@
 		margin-bottom: 0.9rem;
 	}
 	@media (max-width: 599px) {
-		.annos {
+		.hero {
+		position: relative;
+	}
+	.dust {
+		position: absolute;
+		inset: 0;
+		z-index: -1;
+		opacity: 0.55;
+	}
+	.wm-box {
+		position: relative;
+	}
+	.ascii {
+		position: absolute;
+		inset: 0;
+		pointer-events: none;
+	}
+
+	.annos {
 			font-size: 9px;
 			letter-spacing: 0.04em;
 		}

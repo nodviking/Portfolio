@@ -1,22 +1,33 @@
 <script lang="ts">
+	import { untrack } from 'svelte';
 	import { gsap } from '#lib/animations/gsap.ts';
 	import { coverNow, reveal } from '#lib/animations/pixelwipe.ts';
-	import { bootLines } from '#lib/data/preloader.ts';
+	import { bootComment, bootLabels, bootLines } from '#lib/data/preloader.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
 	/**
-	 * [00] Boot sequence: mono log lines type in, a thin orange bar fills with a 000→100 counter, then the screen
-	 * splits into a grid of squares that flip out diagonally to reveal the hero. ~1.8s total.
+	 * [00] Boot sequence:
+	 * 1. a comment block and log lines type in (statuses snap to [ OK ]), a progress bar fills and a giant
+	 *    000% counter ticks up in the corner;
+	 * 2. the log clears, NOD [VIKING] appears small in the centre and its box wipes in;
+	 * 3. the screen flashes accent, then the pixel grid flips out to reveal the hero.
 	 * Skipped before first paint (inline <head> script) on repeat visits and under reduced motion.
 	 */
 	const SESSION_KEY = 'nv-intro';
+	type Line = { text: string; status?: 'OK' | 'RUN'; comment: boolean };
+	const all: Line[] = [
+		...bootComment.map((text) => ({ text, comment: true })),
+		...bootLines.map((l) => ({ ...l, comment: false }))
+	];
 
 	let root: HTMLDivElement | undefined = $state();
 	let gone = $state(false);
 	let count = $state(0);
-	let typed = $state(bootLines.map(() => ''));
-	let done = $state(bootLines.map(() => false));
+	let typed = $state(all.map(() => ''));
+	let done = $state(all.map(() => false));
 	let bar: HTMLDivElement | undefined = $state();
+	let stage = $state<'log' | 'mark' | 'flash'>('log');
+	let box: HTMLSpanElement | undefined = $state();
 
 	$effect(() => {
 		if (document.documentElement.dataset.intro === 'skip') {
@@ -24,88 +35,120 @@
 			motion.introDone = true;
 			return;
 		}
-		if (!root || !bar) return;
+		// Untracked: the log (and its bar) unmounts mid-sequence; that must not re-run this effect and kill the timeline.
+		if (!untrack(() => root && bar)) return;
 
 		const state = { p: 0 };
 		const tl = gsap.timeline();
-		const per = 0.24;
+		const step = 0.11;
 
-		bootLines.forEach((line, i) => {
+		all.forEach((line, i) => {
 			const o = { n: 0 };
 			tl.to(
 				o,
 				{
 					n: line.text.length,
-					duration: per,
+					duration: line.text.length ? 0.1 : 0.03,
 					ease: 'none',
 					onUpdate: () => (typed[i] = line.text.slice(0, Math.round(o.n)))
 				},
-				i * (per + 0.06)
+				i * step
 			).call(() => (done[i] = true), [], '>');
 		});
 
-		const total = bootLines.length * (per + 0.06);
+		const logEnd = all.length * step + 0.1;
 		tl.to(
 			state,
 			{
 				p: 1,
-				duration: total,
+				duration: logEnd,
 				ease: 'power1.inOut',
 				onUpdate: () => {
 					count = Math.round(state.p * 100);
-					bar!.style.transform = `scaleX(${state.p})`;
+					if (bar) bar.style.transform = `scaleX(${state.p})`;
 				}
 			},
 			0
-		);
-
-		// Exit: swap in an identical grid of squares, drop the preloader, flip the squares out.
-		tl.call(
-			() => {
-				coverNow('var(--color-ink)');
-				gone = true;
-				motion.introDone = true;
-				try {
-					sessionStorage.setItem(SESSION_KEY, '1');
-				} catch {
-					/* storage blocked: the intro plays again next time */
-				}
-				reveal(0.3);
-			},
-			[],
-			total + 0.12
-		);
+		)
+			// 2. Wordmark: the log clears, the boxed mark wipes in.
+			.call(() => (stage = 'mark'), [], logEnd + 0.15)
+			.add(() => {
+				if (box) gsap.fromTo(box, { '--box-r': '100%' }, { '--box-r': '0%', duration: 0.35, ease: 'power4.inOut' });
+			}, logEnd + 0.4)
+			// 3. Flash, then the grid flips out.
+			.call(() => (stage = 'flash'), [], logEnd + 0.95)
+			.call(
+				() => {
+					coverNow('var(--color-accent)');
+					gone = true;
+					motion.introDone = true;
+					try {
+						sessionStorage.setItem(SESSION_KEY, '1');
+					} catch {
+						/* storage blocked: the intro plays again next time */
+					}
+					reveal(0.32);
+				},
+				[],
+				logEnd + 1.15
+			);
 
 		return () => tl.kill();
 	});
 </script>
 
 {#if !gone}
-	<div bind:this={root} class="preloader fixed inset-0 z-[160] bg-ink" aria-hidden="true">
-		<div class="absolute bottom-[18vh] left-[var(--gutter)] w-[min(520px,calc(100%-2*var(--gutter)))]">
-			<p class="mb-5 index-tag">[00] / BOOT.SYS</p>
-			<div class="text-[13px] leading-[1.9] text-paper md:text-[14px]">
-				{#each bootLines as line, i (line.text)}
-					<p class="min-h-[1.9em] whitespace-nowrap">
-						{typed[i]}{#if line.ok && done[i]}<span class="text-accent">{' ✓'}</span>{/if}{#if !done[i] && typed[i].length > 0}<span
-								class="caret"
-							></span>{/if}
-					</p>
-				{/each}
-			</div>
-			<div class="mt-6 flex items-center gap-4">
-				<div class="h-[2px] flex-1 bg-line">
-					<div bind:this={bar} class="h-full origin-left scale-x-0 bg-accent"></div>
+	<div
+		bind:this={root}
+		class={['preloader fixed inset-0 z-[160]', stage === 'flash' ? 'bg-accent' : 'bg-ink']}
+		aria-hidden="true"
+	>
+		{#if stage === 'log'}
+			<div
+				class="absolute top-[clamp(1.5rem,6vh,4rem)] left-[var(--gutter)] w-[min(560px,calc(100%-2*var(--gutter)))]"
+			>
+				<div class="text-[11px] leading-[1.75] md:text-[12px]">
+					{#each all as line, i (i)}
+						<p class="flex min-h-[1.75em] justify-between gap-6 whitespace-nowrap">
+							<span class={line.status ? 'text-paper' : 'text-accent'}
+								>{typed[i]}{#if !done[i] && typed[i].length > 0}<span class="caret"></span>{/if}</span
+							>
+							{#if line.status && done[i]}
+								<span class={line.status === 'OK' ? 'text-paper' : 'text-accent'}>[ {line.status} ]</span>
+							{/if}
+						</p>
+					{/each}
 				</div>
-				<p class="caps w-10 text-right text-accent tabular-nums">{String(count).padStart(3, '0')}</p>
+				<div class="mt-5 h-[3px] bg-line">
+					<div bind:this={bar} class="h-full origin-left bg-accent" style="transform: scaleX(0)"></div>
+				</div>
+				<div class="caps mt-2 flex justify-between text-[10px] text-accent">
+					{#each bootLabels as l (l)}<span>{l}</span>{/each}
+				</div>
 			</div>
-		</div>
+			<p class="pct font-display text-accent tabular-nums">{String(count).padStart(3, '0')}%</p>
+		{:else if stage === 'mark'}
+			<p class="absolute inset-0 grid place-items-center">
+				<span class="font-display text-[clamp(1.6rem,3.4vw,2.6rem)] text-accent"
+					>NOD<span bind:this={box} class="boxword ml-[0.14em]" data-text="VIKING" style="--box-r:100%"
+						>VIKING</span
+					></span
+				>
+			</p>
+		{/if}
 	</div>
 {/if}
 
 <style>
 	:global(html[data-intro='skip']) .preloader {
 		display: none;
+	}
+	.pct {
+		position: absolute;
+		right: var(--gutter);
+		bottom: clamp(1rem, 4vh, 2.5rem);
+		font-size: clamp(5rem, 17vw, 15rem);
+		line-height: 0.8;
 	}
 	.caret {
 		display: inline-block;

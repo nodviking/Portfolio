@@ -81,7 +81,7 @@
 	];
 </script>
 
-<section id="contact" data-section="10" class="section pb-14" aria-labelledby="contact-title">
+<section id="contact" data-section="11" class="section pb-14" aria-labelledby="contact-title">
 	<SectionHead id="contact" />
 
 	<div class="wm-wrap">

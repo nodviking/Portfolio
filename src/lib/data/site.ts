@@ -50,6 +50,7 @@ export const primaryLinks: NavLink[] = [
 	{ label: 'About', href: '/#about' },
 	{ label: 'StoreEnv', href: '/#storeenv' },
 	{ label: 'Work', href: '/#work' },
+	{ label: 'FAQ', href: '/#faq' },
 	{ label: 'Contact', href: '/#contact' }
 ];
 
@@ -74,7 +75,8 @@ export const sections: SectionMeta[] = [
 	{ id: 'stack', index: '07', file: 'STACK.JSON', label: 'Stack' },
 	{ id: 'numbers', index: '08', file: 'STATS.LOG', label: 'Numbers' },
 	{ id: 'design', index: '09', file: 'DESIGN.ARCHIVE', label: 'Design roots' },
-	{ id: 'contact', index: '10', file: 'CONTACT.SH', label: 'Contact' }
+	{ id: 'faq', index: '10', file: 'FAQ.MD', label: 'FAQ' },
+	{ id: 'contact', index: '11', file: 'CONTACT.SH', label: 'Contact' }
 ];
 
 export const sectionById = (id: string) => sections.find((s) => s.id === id)!;
