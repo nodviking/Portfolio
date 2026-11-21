@@ -106,7 +106,7 @@
 	.dot {
 		width: 6px;
 		height: 6px;
-		background: var(--color-accent-soft);
+		background: var(--color-accent);
 	}
 	.dot.shrink {
 		opacity: 0;
@@ -121,7 +121,7 @@
 	.ring.hover {
 		width: 64px;
 		height: 64px;
-		border-color: var(--color-accent-soft);
+		border-color: var(--color-accent);
 	}
 	.ring.label {
 		width: 92px;

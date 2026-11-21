@@ -1,7 +1,6 @@
 <script lang="ts">
 	import { tick } from 'svelte';
 	import { magnetic } from '#lib/actions/magnetic.ts';
-	import IsoCube from '#lib/components/ui/IsoCube.svelte';
 	import { primaryLinks } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 	import MenuOverlay from './MenuOverlay.svelte';
@@ -62,7 +61,6 @@
 >
 	<div class="relative flex h-[var(--nav-h)] items-center justify-between px-[var(--gutter)]">
 		<a href="/" class="flex items-center gap-3" aria-label="nodviking, home">
-			<IsoCube size={26} />
 			<NavWordmark />
 		</a>
 
@@ -76,7 +74,7 @@
 							class={['navlink caps', active === id && 'is-active']}
 							aria-current={active === id ? 'location' : undefined}
 						>
-							<b class="mr-2 text-[10px] font-black text-accent-soft"
+							<b class="mr-2 text-[10px] font-black text-accent"
 								>{String(i + 1).padStart(2, '0')}</b
 							><span>{link.label}</span>
 						</a>
@@ -119,7 +117,7 @@
 		right: 0;
 		bottom: -2px;
 		height: 1px;
-		background: var(--color-accent-soft);
+		background: var(--color-accent);
 		transform: scaleX(0);
 		transform-origin: left;
 		transition: transform 0.45s var(--ease-expo);

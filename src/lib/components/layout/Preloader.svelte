@@ -99,7 +99,7 @@
 			{site.role}
 		</p>
 		<p
-			class="caps text-accent-soft absolute right-[var(--gutter)] bottom-5 tabular-nums md:bottom-7"
+			class="caps text-accent absolute right-[var(--gutter)] bottom-5 tabular-nums md:bottom-7"
 		>
 			{String(count).padStart(3, '0')}
 		</p>

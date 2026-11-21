@@ -1,8 +1,6 @@
 <script lang="ts">
-	import { magnetic } from '#lib/actions/magnetic.ts';
 	import { EASE, gsap } from '#lib/animations/gsap.ts';
-	import HeroArt from '#lib/components/ui/HeroArt.svelte';
-	import { heroCta, heroIntro, heroTag, heroWordmark } from '#lib/data/hero.ts';
+	import { heroIntro, heroTag, heroWordmark } from '#lib/data/hero.ts';
 	import { site } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
@@ -63,19 +61,6 @@
 				{ '--box-r': '0%', duration: 0.5, ease: 'power4.inOut' },
 				0.95
 			)
-			// Isometric field rises in, then the blue cube drops onto it.
-			.fromTo(
-				q('[data-art="slab"], [data-art="ghost"], [data-art="dashed"]'),
-				{ y: 16, clipPath: 'inset(0% 0% 100% 0%)' },
-				{ y: 0, clipPath: 'inset(0% 0% 0% 0%)', duration: 0.7, stagger: 0.02 },
-				0.4
-			)
-			.fromTo(
-				q('[data-art="solid"]'),
-				{ y: -70, clipPath: 'inset(0% 0% 0% 0%)' },
-				{ y: 0, duration: 0.7, ease: 'power4.out' },
-				1.05
-			)
 			.fromTo(
 				q('[data-rule]'),
 				{ scaleX: 0 },
@@ -108,9 +93,6 @@
 		</p>
 	</div>
 
-	<div class="art" data-intro>
-		<HeroArt />
-	</div>
 
 	<!-- One word in the DOM ("NODVIKING"); the box is a pseudo-element so the text isn't duplicated. -->
 	<h1 id="hero-title" class="wordmark font-display" aria-label={site.brand}>
@@ -129,24 +111,7 @@
 			<p data-intro data-line>{heroIntro[0]}</p>
 			<p class="mt-2 text-mute" data-intro data-line>{heroIntro[1]}</p>
 		</div>
-		<div class="w-full md:w-[320px]">
-			{#if site.available}
-				<p class="mb-3 flex items-center gap-3 text-[12px] text-mute" data-intro data-line>
-					<span class="tag-mark" aria-hidden="true"></span>{site.availability}.
-				</p>
-			{/if}
-			<div data-intro data-line>
-				<a
-					href={heroCta.href}
-					target="_blank"
-					rel="noopener noreferrer"
-					class="btn btn--lg w-full"
-					use:magnetic={{ strength: 0.12 }}
-				>
-					{heroCta.label} <span aria-hidden="true">↗</span>
-				</a>
-			</div>
-		</div>
+		<p class="caps self-end text-mute" data-intro data-line>[ Scroll ↓ ]</p>
 	</div>
 </section>
 
@@ -156,21 +121,6 @@
 		flex-direction: column;
 		min-height: 100svh;
 		padding: calc(var(--nav-h) + 16px) var(--gutter) clamp(24px, 4.5vh, 40px);
-	}
-
-	/* The art takes whatever space is left, so the hero always fits one screen. */
-	.art {
-		position: relative;
-		flex: 1;
-		min-height: 120px;
-		margin-block: clamp(0.75rem, 3vh, 2.5rem);
-	}
-	.art :global(svg) {
-		position: absolute;
-		inset: 0;
-		margin: auto;
-		max-width: 620px;
-		max-height: 420px;
 	}
 
 	.wordmark {

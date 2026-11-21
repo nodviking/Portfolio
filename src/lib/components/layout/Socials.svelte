@@ -12,7 +12,7 @@
 				href={s.href}
 				target={s.icon === 'mail' ? undefined : '_blank'}
 				rel={s.icon === 'mail' ? undefined : 'noopener noreferrer'}
-				class="grid size-8 place-items-center text-mute transition-colors duration-300 hover:text-accent-soft"
+				class="grid size-8 place-items-center text-mute transition-colors duration-300 hover:text-accent"
 				aria-label={s.label}
 			>
 				<Icon name={s.icon} {size} />

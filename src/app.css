@@ -1,7 +1,7 @@
 @import 'tailwindcss';
 
 /*
- * nodviking design system: technical / brutalist, one blue accent.
+ * nodviking design system: technical / brutalist, one orange accent.
  * JetBrains Mono everywhere, hairline frames with square corner nodes, filled tab labels, no glow, no blur.
  */
 
@@ -13,14 +13,10 @@
 	--color-mute: #8a8f98;
 	--color-line: #2a2a2a;
 	--color-line-strong: #3a3a3a;
-	/*
-	 * The one accent. Contrast on #0E0E0E: #2F6BFF = 4.29:1 (large text, fills, graphics only),
-	 * #5B8CFF = 6.1:1 (small text, links, hover). White on #2F6BFF = 4.5:1 (button/tab text).
-	 */
-	--color-accent: #2f6bff;
-	--color-accent-soft: #5b8cff;
-	--color-accent-deep: #1f55e0;
-	--color-on-accent: #ffffff;
+	/* The one accent: Syntax Error orange. #FF4A00 on #0E0E0E = 5.73:1 and #0E0E0E on #FF4A00 = 5.73:1,
+	   so it passes AA for small text both ways; no lighter tint needed. */
+	--color-accent: #ff4a00;
+	--color-on-accent: #0e0e0e;
 
 	--font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 	--font-sans: var(--font-mono);
@@ -63,7 +59,7 @@
 	}
 
 	:focus-visible {
-		outline: 2px solid var(--color-accent-soft);
+		outline: 2px solid var(--color-accent);
 		outline-offset: 3px;
 	}
 	::selection {
@@ -124,8 +120,8 @@
 	}
 	a.tag:hover,
 	button.tag:hover {
-		border-color: var(--color-accent-soft);
-		color: var(--color-accent-soft);
+		border-color: var(--color-accent);
+		color: var(--color-accent);
 	}
 	.tag-mark {
 		width: 8px;
@@ -150,7 +146,7 @@
 		transition: background-color 0.3s var(--ease-expo);
 	}
 	.btn:hover {
-		background: var(--color-accent-deep);
+		background: var(--color-paper);
 	}
 	.btn--lg {
 		padding: 14px 18px;
@@ -197,7 +193,7 @@
 		font-size: 12px;
 		font-weight: 700;
 		letter-spacing: 0.04em;
-		color: var(--color-accent-soft);
+		color: var(--color-accent);
 	}
 
 	.skip-link {
