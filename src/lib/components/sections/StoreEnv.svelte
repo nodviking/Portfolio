@@ -21,7 +21,7 @@
 	let termBox: HTMLDivElement;
 
 	let progress = $state(0);
-	let termProgress = $state(0);
+	let termProgress = $state(0.14);
 	const count = $derived(Math.min(features.length, Math.floor(progress * features.length) + 1));
 	const pad = (n: number) => String(n).padStart(2, '0');
 
@@ -63,7 +63,8 @@
 					invalidateOnRefresh: true,
 					onUpdate: (self) => {
 						progress = self.progress;
-						termProgress = self.progress;
+						// Start with the first command already typed so the terminal is never an empty box.
+						termProgress = 0.14 + self.progress * 0.86;
 					},
 					onRefresh: () => ((window as Window & { __nvStoreenvLen?: number }).__nvStoreenvLen = len())
 				}
@@ -98,7 +99,7 @@
 				start: 'top 80%',
 				once: true,
 				onEnter: () =>
-					gsap.to(o, { p: 1, duration: 5.5, ease: 'none', onUpdate: () => (termProgress = o.p) })
+					gsap.to(o, { p: 1, duration: 5.5, ease: 'none', onUpdate: () => (termProgress = 0.14 + o.p * 0.86) })
 			});
 			progress = 1;
 		});
@@ -233,8 +234,8 @@
 			max-width: none;
 		}
 		.term-box {
-			align-self: end;
-			padding-top: 1.4rem;
+			align-self: start;
+			padding-top: calc(1.4rem + 1.6rem + 0.75rem);
 		}
 	}
 	@media (min-width: 900px) and (prefers-reduced-motion: reduce) {

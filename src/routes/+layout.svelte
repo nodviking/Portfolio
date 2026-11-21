@@ -82,7 +82,7 @@
 
 <svelte:head>
 	<meta name="author" content={site.realName} />
-	<meta name="theme-color" content="#0e0e0e" />
+	<meta name="theme-color" content="#f2eee7" />
 	<link rel="icon" href="/favicon-32.png" sizes="32x32" type="image/png" />
 	<link rel="apple-touch-icon" href="/apple-touch-icon.png" />
 	<link rel="preload" href={monoFontUrl} as="font" type="font/woff2" crossorigin="anonymous" />

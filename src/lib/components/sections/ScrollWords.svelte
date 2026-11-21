@@ -70,7 +70,7 @@
 <style>
 	.words {
 		position: relative;
-		height: 320svh;
+		height: 250svh;
 	}
 	.words.is-still {
 		height: auto;

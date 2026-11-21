@@ -1,7 +1,7 @@
 # nodviking — portfolio
 
-Personal portfolio of **nodviking** — live at **https://nodviking.me**. Technical / brutalist style: `#0E0E0E`, one
-maroon accent, JetBrains Mono everywhere, hairline frames with square corner nodes, ASCII-art canvases.
+Personal portfolio of **nodviking** — live at **https://nodviking.me**. Technical / brutalist style, light theme: warm `#F2EEE7` paper, one
+maroon accent (`#6B0F1F`), JetBrains Mono everywhere, hairline frames with square corner nodes, ASCII-art canvases.
 
 ## Stack
 

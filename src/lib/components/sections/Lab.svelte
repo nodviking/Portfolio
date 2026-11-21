@@ -22,31 +22,31 @@
 <section id="lab" data-section="05" class="section" aria-labelledby="lab-title">
 	<SectionHead id="lab" title="More builds" titleId="lab-title" />
 
-	<div
-		class={[
-			'grid gap-x-6 gap-y-14',
-			lab.length >= 3 ? 'md:grid-cols-3' : lab.length === 2 ? 'md:grid-cols-2' : 'md:max-w-[640px]'
-		]}
-	>
+	<!-- One project: a full-width card split in two. Two or more: a grid of cards. -->
+	<div class={['grid gap-x-6 gap-y-14', lab.length >= 3 ? 'md:grid-cols-3' : lab.length === 2 && 'md:grid-cols-2']}>
 		{#each lab as item, i (item.title)}
 			<div use:reveal={{ clip: false, y: 48, delay: i * 0.1 }}>
 				<article
-					class="frame frame--lift flex h-full flex-col bg-ink p-6"
+					class={['frame frame--lift h-full bg-ink p-6 md:p-8', lab.length === 1 ? 'grid gap-8 md:grid-cols-[minmax(0,1fr)_minmax(0,1.15fr)] md:gap-14' : 'flex flex-col']}
 					use:frameDraw={{ delay: i * 0.1 }}
 					use:readoutHover
 				>
 					<span class="tab-label">{item.tab}</span>
-					<div class="flex items-start justify-between gap-4" data-readout aria-hidden="true">
-						<div class="text-[10px] leading-[1.7] tracking-[0.04em] text-mute uppercase">
-							{#each item.readout as r (r)}<p data-text={r}>{r}</p>{/each}
+					<div class="flex flex-col">
+						<div class="flex items-start justify-between gap-4" data-readout aria-hidden="true">
+							<div class="text-[10px] leading-[1.7] tracking-[0.04em] text-mute uppercase">
+								{#each item.readout as r (r)}<p data-text={r}>{r}</p>{/each}
+							</div>
+							<span class="blink mt-1 size-2 shrink-0 bg-accent"></span>
 						</div>
-						<span class="blink mt-1 size-2 shrink-0 bg-accent"></span>
+						<h3 class="mt-10 font-display text-[clamp(2rem,4.4vw,3.6rem)] text-paper">{item.title}</h3>
 					</div>
-					<h3 class="mt-10 font-display text-[clamp(1.8rem,3vw,2.8rem)] text-paper">{item.title}</h3>
-					<p class="mt-4 text-[14px] leading-[1.6] text-mute">{item.body}</p>
-					<ul class="mt-auto flex flex-wrap gap-2 pt-7" aria-label="Built with">
-						{#each item.stack as s (s)}<li class="chip">{s}</li>{/each}
-					</ul>
+					<div class="flex flex-col md:justify-end">
+						<p class="text-[15px] leading-[1.65] text-mute md:text-[16px]">{item.body}</p>
+						<ul class="mt-6 flex flex-wrap gap-2" aria-label="Built with">
+							{#each item.stack as s (s)}<li class="chip">{s}</li>{/each}
+						</ul>
+					</div>
 				</article>
 			</div>
 		{/each}

@@ -52,7 +52,7 @@
 
 	$effect(() => {
 		if (!ready) return;
-		const color = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-ink').trim() || '#cc5b6b';
+		const color = getComputedStyle(document.documentElement).getPropertyValue('--color-accent-ink').trim() || '#6b0f1f';
 		const f = createField({ canvas, cell, color, dust, pointer, fps, still: motion.reduced });
 		field = f;
 		let alive = true;

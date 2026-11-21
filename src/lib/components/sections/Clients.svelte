@@ -76,6 +76,7 @@
 					onpointerenter={() => (hovered = i)}
 				>
 					<span class="index-tag row-idx">{pad(i + 1)}</span>
+					<span class="row-thumb" aria-hidden="true"><Shot slug={c.slug} alt="" /></span>
 					<span class="row-name font-display">{c.name}</span>
 					<span class="row-cat caps">{c.category}</span>
 					<span class="row-year caps">{c.year}</span>
@@ -131,6 +132,28 @@
 			background-color 0.25s var(--ease-expo),
 			color 0.25s var(--ease-expo);
 	}
+	.row-thumb {
+		display: none;
+	}
+	@media (min-width: 900px) {
+		.row-thumb {
+			display: block;
+			width: 9.5rem;
+			aspect-ratio: 16 / 10;
+			border-radius: 10px;
+			overflow: hidden;
+			border: 1px solid var(--color-line);
+			transition: transform 0.5s var(--ease-expo);
+		}
+		.row-thumb :global(img) {
+			height: 100%;
+			object-fit: cover;
+			object-position: top;
+		}
+		.row:hover .row-thumb {
+			transform: rotate(-4deg) scale(1.06);
+		}
+	}
 	.row-name {
 		font-size: clamp(1.6rem, 4.6vw, 4.4rem);
 		line-height: 0.95;
@@ -154,7 +177,7 @@
 	}
 	@media (min-width: 900px) {
 		.row {
-			grid-template-columns: 3.5rem minmax(0, 1fr) 17rem 4rem 2rem;
+			grid-template-columns: 3rem 9.5rem minmax(0, 1fr) 17rem 4rem 2rem;
 			align-items: center;
 		}
 		.row-cat,

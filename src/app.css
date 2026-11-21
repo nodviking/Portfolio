@@ -7,22 +7,21 @@
 
 /* ---------- Design tokens (exposed as CSS vars + Tailwind utilities) ---------- */
 @theme {
-	--color-ink: #0e0e0e;
-	--color-panel: #121212;
-	--color-paper: #ededf0;
-	--color-mute: #8a8f98;
-	--color-line: #2a2a2a;
-	--color-line-strong: #3a3a3a;
+	/* Light theme. Names are semantic: `ink` = page background, `paper` = primary text. */
+	--color-ink: #f2eee7;
+	--color-panel: #ebe6dd;
+	--color-paper: #141212;
+	--color-mute: #5f5953;
+	--color-line: #d6d0c6;
+	--color-line-strong: #b5ada1;
 	/*
-	 * One accent: maroon, in three shades (contrast on #0E0E0E):
-	 * - accent         #6B0F1F  fills (buttons, boxes, tab labels, bars); white text on it = 12.26:1
-	 * - accent-display #AE2E44  large display type only (3.01:1, AA for large text)
-	 * - accent-ink     #CC5B6B  small text, thin lines, icons, ASCII art (4.85:1, AA)
+	 * One accent: maroon #6B0F1F. On #F2EEE7 it is 10.6:1, so the same shade works for fills, large type, small
+	 * text and lines. `-display` and `-ink` stay as aliases so components can opt into a different shade later.
 	 */
 	--color-accent: #6b0f1f;
-	--color-accent-display: #ae2e44;
-	--color-accent-ink: #cc5b6b;
-	--color-on-accent: #ffffff;
+	--color-accent-display: #6b0f1f;
+	--color-accent-ink: #6b0f1f;
+	--color-on-accent: #f2eee7;
 
 	--font-mono: 'JetBrains Mono Variable', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 	--font-sans: var(--font-mono);
@@ -44,7 +43,7 @@
 		color: var(--color-paper);
 		-webkit-font-smoothing: antialiased;
 		-moz-osx-font-smoothing: grayscale;
-		color-scheme: dark;
+		color-scheme: light;
 	}
 	/* Background lives on <html> only, so the fixed dot grid (z-index -1) shows through <body>. */
 	body {
@@ -113,8 +112,8 @@
 		align-items: center;
 		gap: 0.75rem;
 		padding: 7px 12px;
-		border: 1px solid rgb(237 237 240 / 0.22);
-		background: rgb(14 14 14 / 0.6);
+		border: 1px solid var(--color-line-strong);
+		background: rgb(242 238 231 / 0.7);
 		font-size: 12px;
 		font-weight: 700;
 		letter-spacing: 0.14em;
@@ -291,7 +290,7 @@
 	/* Standard section spacing */
 	.section {
 		position: relative;
-		padding: clamp(5rem, 12vw, 10rem) var(--gutter);
+		padding: clamp(3.5rem, 6.5vw, 6rem) var(--gutter);
 	}
 
 	/* Small outlined tag chip (stack tags, project tech) */

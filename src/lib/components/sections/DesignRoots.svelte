@@ -1,51 +1,36 @@
 <script lang="ts">
-	import { frameDraw } from '#lib/actions/frameDraw.ts';
+	import { magnetic } from '#lib/actions/magnetic.ts';
+	import CurvedGallery from '#lib/components/ui/CurvedGallery.svelte';
 	import SectionHead from '#lib/components/ui/SectionHead.svelte';
 	import { designRoots } from '#lib/data/contact.ts';
+	import { design } from '#lib/data/design.ts';
 	import { site } from '#lib/data/site.ts';
+
+	/** [09] Design roots: two curved galleries of real design work, drifting in opposite directions. */
+	const wide = design.filter((d) => d.w / d.h > 1.2);
+	const square = design.filter((d) => d.w / d.h <= 1.2);
 </script>
 
-<section id="design" data-section="09" class="section" aria-labelledby="design-title">
-	<SectionHead id="design" />
+<section id="design" data-section="09" class="section !px-0" aria-labelledby="design-title">
+	<div class="px-[var(--gutter)]">
+		<SectionHead id="design" title={designRoots.title} titleId="design-title" />
+	</div>
 
-	<a
-		href={site.designPortfolio}
-		target="_blank"
-		rel="noopener noreferrer"
-		class="card frame block p-7 md:p-14"
-		use:frameDraw
-		data-cursor
-	>
-		<span class="tab-label">01 / PORTFOLIO.CANVA</span>
-		<h2 id="design-title" class="font-display text-[clamp(2.2rem,6.4vw,6rem)]" data-no-scramble>
-			{designRoots.title}
-		</h2>
-		<p class="mt-6 max-w-[52ch] text-[15px] leading-[1.6] md:text-[17px]" data-no-scramble>{designRoots.body}</p>
-		<span class="caps mt-10 inline-flex items-center gap-3">
+	<div class="grid gap-2">
+		<CurvedGallery items={wide} height={210} />
+		<CurvedGallery items={square} dir={-1} height={170} />
+	</div>
+
+	<div class="mt-10 flex flex-wrap items-center justify-between gap-6 px-[var(--gutter)]">
+		<p class="max-w-[52ch] text-[15px] leading-[1.6] text-mute">{designRoots.body}</p>
+		<a
+			href={site.designPortfolio}
+			target="_blank"
+			rel="noopener noreferrer"
+			class="btn btn--lg"
+			use:magnetic={{ strength: 0.2 }}
+		>
 			<span>{designRoots.cta}</span><span aria-hidden="true" data-no-scramble>↗</span>
-		</span>
-	</a>
+		</a>
+	</div>
 </section>
-
-<style>
-	.card {
-		color: var(--color-paper);
-		transition:
-			background-color 0.3s var(--ease-expo),
-			color 0.3s var(--ease-expo);
-	}
-	.card p {
-		color: var(--color-mute);
-		transition: color 0.3s var(--ease-expo);
-	}
-	.card:hover,
-	.card:focus-visible {
-		background: var(--color-accent);
-		color: var(--color-on-accent);
-		--node-c: var(--color-on-accent);
-	}
-	.card:hover p,
-	.card:focus-visible p {
-		color: var(--color-on-accent);
-	}
-</style>

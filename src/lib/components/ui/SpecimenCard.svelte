@@ -91,7 +91,7 @@
 					x2={W}
 					y1={l.y}
 					y2={l.y}
-					stroke={l.accent ? 'var(--color-accent-ink)' : '#333'}
+					stroke={l.accent ? 'var(--color-accent-ink)' : 'var(--color-line-strong)'}
 					stroke-width={l.accent ? 4 : 3}
 				/>
 				<text data-lbl x="0" y={l.y - 22} class="lbl">
@@ -108,7 +108,7 @@
 					x2={x}
 					y1={top}
 					y2={descY}
-					stroke="#3a3a3a"
+					stroke="var(--color-line-strong)"
 					stroke-width="3"
 					stroke-dasharray="14 12"
 				/>
@@ -138,7 +138,7 @@
 			<path
 				data-h
 				d="M{x0} {dimY}H{x0 + m.advance}M{x0} {dimY - 22}V{dimY + 22}M{x0 + m.advance} {dimY - 22}V{dimY + 22}"
-				stroke="#5a5a5a"
+				stroke="var(--color-mute)"
 				stroke-width="4"
 			/>
 			<text data-lbl x={x0 + m.advance / 2} y={dimY + 95} text-anchor="middle" class="lbl" fill="var(--color-mute)"

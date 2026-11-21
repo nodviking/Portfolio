@@ -31,18 +31,30 @@
 		};
 	});
 
+	// The section whose box contains the middle of the viewport (recomputed on scroll, so jumps never go stale).
 	$effect(() => {
 		void page.url.pathname; // re-scan after each navigation
 		const els = Array.from(document.querySelectorAll<HTMLElement>('[data-section]'));
 		if (!els.length) return;
-		const io = new IntersectionObserver(
-			(entries) => {
-				for (const e of entries) if (e.isIntersecting) current = (e.target as HTMLElement).dataset.section!;
-			},
-			{ rootMargin: '-50% 0px -50% 0px' }
-		);
-		els.forEach((el) => io.observe(el));
-		return () => io.disconnect();
+		let raf = 0;
+		const update = () => {
+			raf = 0;
+			const mid = window.innerHeight / 2;
+			let pick = els[0];
+			for (const el of els) if (el.getBoundingClientRect().top <= mid) pick = el;
+			current = pick.dataset.section!;
+		};
+		const on = () => {
+			if (!raf) raf = requestAnimationFrame(update);
+		};
+		update();
+		window.addEventListener('scroll', on, { passive: true });
+		window.addEventListener('resize', on);
+		return () => {
+			window.removeEventListener('scroll', on);
+			window.removeEventListener('resize', on);
+			if (raf) cancelAnimationFrame(raf);
+		};
 	});
 </script>
 
@@ -58,7 +70,7 @@
 		height: 100%;
 		z-index: 55;
 		pointer-events: none;
-		background: rgb(237 237 240 / 0.04);
+		background: rgb(20 18 18 / 0.06);
 	}
 	.bar {
 		width: 100%;

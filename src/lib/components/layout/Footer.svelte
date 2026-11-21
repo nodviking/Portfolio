@@ -7,7 +7,7 @@
 	import { site } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
-	/** Footer: brand + link columns, a giant ASCII NODVIKING that assembles on enter, and the legal row. */
+	/** Footer: brand + location, a giant ASCII NODVIKING that assembles on enter, and the legal row. */
 	let art: HTMLDivElement;
 	let reveal = $state(motion.reduced ? 1 : 0);
 	// Narrow screens: stack the wordmark and use finer cells so it stays legible.
@@ -38,42 +38,17 @@
 	function toTop() {
 		scrollToTarget(document.getElementById('main') ?? 0);
 	}
-
-	const follow = [
-		{ label: 'GitHub', href: site.github },
-		{ label: 'LinkedIn', href: site.linkedin },
-		{ label: 'Design portfolio', href: site.designPortfolio }
-	];
 </script>
 
 <footer class="px-[var(--gutter)] pt-16 pb-6 md:pb-8">
-	<div class="grid gap-10 border-t border-line pt-10 sm:grid-cols-2 lg:grid-cols-4">
+	<div class="flex flex-wrap items-end justify-between gap-6 border-t border-line pt-10">
 		<div>
 			<p class="font-display text-[22px] text-paper">{site.brand}</p>
 			<p class="mt-2 text-[13px] text-mute">Design. Build. Ship.</p>
 		</div>
-		<div>
-			<p class="caps mb-3 text-[10px] text-accent-ink">Follow me on</p>
-			<ul class="grid gap-1.5 text-[13px]">
-				{#each follow as l (l.href)}
-					<li>
-						<a class="text-paper hover:text-accent-ink" href={l.href} target="_blank" rel="noopener noreferrer"
-							><span>{l.label}</span> <span aria-hidden="true" data-no-scramble>↗</span></a
-						>
-					</li>
-				{/each}
-			</ul>
-		</div>
-		<div>
-			<p class="caps mb-3 text-[10px] text-accent-ink">Contact me at</p>
-			<a class="text-[13px] text-paper underline underline-offset-4 hover:text-accent-ink" href="mailto:{site.email}"
-				><span>{site.email}</span></a
-			>
-		</div>
-		<div>
-			<p class="caps mb-3 text-[10px] text-accent-ink">Based in</p>
-			<p class="text-[13px] text-paper">{site.location}</p>
-			<p class="mt-1 text-[13px] text-mute"><LocalTime /></p>
+		<div class="text-right">
+			<p class="caps mb-1 text-[10px] text-accent-ink">Based in</p>
+			<p class="text-[13px] text-paper">{site.location} · <LocalTime /></p>
 		</div>
 	</div>
 

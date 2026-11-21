@@ -1,7 +1,7 @@
 /** Design roots ([09]) + contact ([10]). */
 export const designRoots = {
 	title: 'Before code, there was design.',
-	body: '250+ projects for 80+ clients: identities, social creatives, thumbnails.',
+	body: '80+ clients across YouTube, music, food and fashion. The full archive lives on my design portfolio.',
 	cta: 'View design portfolio'
 } as const;
 
