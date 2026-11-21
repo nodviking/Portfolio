@@ -1,25 +1,26 @@
 <script lang="ts">
 	import About from '#lib/components/sections/About.svelte';
+	import Clients from '#lib/components/sections/Clients.svelte';
+	import Contact from '#lib/components/sections/Contact.svelte';
+	import DesignRoots from '#lib/components/sections/DesignRoots.svelte';
+	import Experience from '#lib/components/sections/Experience.svelte';
 	import Hero from '#lib/components/sections/Hero.svelte';
-
-	// Remaining scenes are scaffolding until their phases land (order from ANSWERS.md section B).
-	const scenes = [
-		{ id: 'storeenv', label: 'StoreEnv' },
-		{ id: 'work', label: 'Client work' },
-		{ id: 'stack', label: 'Stack' },
-		{ id: 'contact', label: 'Contact' }
-	];
+	import Lab from '#lib/components/sections/Lab.svelte';
+	import Numbers from '#lib/components/sections/Numbers.svelte';
+	import Stack from '#lib/components/sections/Stack.svelte';
+	import StoreEnv from '#lib/components/sections/StoreEnv.svelte';
+	import Seo from '#lib/components/ui/Seo.svelte';
 </script>
+
+<Seo />
 
 <Hero />
 <About />
-
-{#each scenes as scene (scene.id)}
-	<section
-		id={scene.id}
-		aria-label={scene.label}
-		class="grid min-h-[60svh] place-items-center border-t border-line px-[var(--gutter)]"
-	>
-		<h2 class="caps text-mute">{scene.label}</h2>
-	</section>
-{/each}
+<StoreEnv />
+<Clients />
+<Lab />
+<Experience />
+<Stack />
+<Numbers />
+<DesignRoots />
+<Contact />

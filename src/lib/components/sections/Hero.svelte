@@ -1,47 +1,53 @@
 <script lang="ts">
 	import { EASE, gsap } from '#lib/animations/gsap.ts';
+	import { CIPHER, cipherOf, scrambleTo } from '#lib/animations/scramble.ts';
+	import LocalTime from '#lib/components/ui/LocalTime.svelte';
 	import { heroIntro, heroTag, heroWordmark } from '#lib/data/hero.ts';
 	import { site } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
 	/**
-	 * Hero: outlined role tag at the top, the two-part wordmark at the bottom centre ("NOD" in blue, "VIKING" in a
-	 * blue box with dark text), then a hairline divider with intro copy on the left and status + CTA on the right.
+	 * [01] Hero. The type is the hero: NOD (orange) + VIKING (orange box, dark text) sized to the full content
+	 * width (container-query units), bottom-anchored, framed by spec-drawing annotations and a live dimension line.
 	 *
-	 * Intro (after the preloader): the wordmark letters ScrambleText-decode into place, then the box wipes in behind
-	 * VIKING. Plain HTML text, no canvas. Under reduced motion everything is simply there.
+	 * Intro: letters ScrambleText-decode left to right (widths locked), the box wipes in behind VIKING, then the
+	 * annotations and dimension line draw in. Scroll: slight wordmark parallax, the divider scales out.
 	 */
-	const CIPHER = '0123456789ABCDEF{}<>=/#';
-
 	let root: HTMLElement;
+	let wrap: HTMLDivElement;
 	let first: HTMLSpanElement;
 	let boxed: HTMLSpanElement;
-	/** Once true, the pre-intro hiding CSS no longer applies (it never comes back, even if the effect re-runs). */
+	let wordmark: HTMLHeadingElement;
+	let width = $state(0);
 	let played = $state(false);
 
-	const rand = (n: number) =>
-		Array.from({ length: n }, () => CIPHER[(Math.random() * CIPHER.length) | 0]).join('');
+	// Live pixel width for the dimension label.
+	$effect(() => {
+		const ro = new ResizeObserver(() => (width = Math.round(wordmark.getBoundingClientRect().width)));
+		ro.observe(wordmark);
+		return () => ro.disconnect();
+	});
 
+	// Intro.
 	$effect(() => {
 		if (!motion.introDone) return;
 		played = true;
 		if (motion.reduced) return;
 
 		const q = (s: string) => root.querySelectorAll<HTMLElement>(s);
-		const scramble = (text: string) => ({
-			duration: 0.75,
-			ease: 'none',
-			scrambleText: { text, chars: CIPHER, revealDelay: 0.25, speed: 0.9, tweenLength: false }
-		});
-
-		// Lock each word's width (in em, so it still scales) and start from same-length ciphertext,
-		// so the centred wordmark never changes width while it decodes.
-		for (const el of [first, boxed]) {
+		const words = [first, boxed];
+		// Lock each word's width (em, so it still scales), start from same-length ciphertext.
+		for (const el of words) {
 			const px = parseFloat(getComputedStyle(el).fontSize) || 1;
 			el.style.minWidth = `${el.getBoundingClientRect().width / px}em`;
 		}
-		first.textContent = rand(heroWordmark.first.length);
-		boxed.textContent = rand(heroWordmark.boxed.length);
+		first.textContent = cipherOf(heroWordmark.first.toUpperCase());
+		boxed.textContent = cipherOf(heroWordmark.boxed.toUpperCase());
+		const annos = Array.from(q('[data-anno]'));
+		annos.forEach((el) => {
+			el.dataset.text ??= el.textContent ?? '';
+			el.textContent = cipherOf(el.dataset.text);
+		});
 
 		const tl = gsap
 			.timeline({ defaults: { ease: EASE.out } })
@@ -52,66 +58,119 @@
 				{ clipPath: 'inset(0% 0% 0% 0%)', duration: 0.6, ease: 'power4.out' },
 				0
 			)
-			.to(first, scramble(heroWordmark.first.toUpperCase()), 0.05)
-			.to(boxed, scramble(heroWordmark.boxed.toUpperCase()), 0.18)
-			// Box wipes in behind VIKING once it has decoded.
-			.fromTo(
+			.to(
+				first,
+				{
+					duration: 0.7,
+					ease: 'none',
+					scrambleText: { text: heroWordmark.first.toUpperCase(), chars: CIPHER, revealDelay: 0.2, speed: 0.9, tweenLength: false }
+				},
+				0.05
+			)
+			.to(
 				boxed,
-				{ '--box-r': '100%' },
-				{ '--box-r': '0%', duration: 0.5, ease: 'power4.inOut' },
-				0.95
+				{
+					duration: 0.8,
+					ease: 'none',
+					scrambleText: { text: heroWordmark.boxed.toUpperCase(), chars: CIPHER, revealDelay: 0.25, speed: 0.9, tweenLength: false }
+				},
+				0.2
 			)
-			.fromTo(
-				q('[data-rule]'),
-				{ scaleX: 0 },
-				{ scaleX: 1, duration: 1, transformOrigin: 'left center' },
-				0.35
-			)
+			// Box wipes in from the left behind VIKING.
+			.fromTo(boxed, { '--box-r': '100%' }, { '--box-r': '0%', duration: 0.55, ease: 'power4.inOut' }, 0.95)
+			// Annotations: dimension line draws out from the centre, end ticks drop in, labels decode.
+			.fromTo(q('[data-dim-line]'), { scaleX: 0 }, { scaleX: 1, duration: 0.9 }, 1.1)
+			.fromTo(q('[data-dim-tick]'), { scaleY: 0 }, { scaleY: 1, duration: 0.4, stagger: 0.05 }, 1.35)
+			.add(() => annos.forEach((el, i) => scrambleTo(el, el.dataset.text, 0.6, i * 0.06)), 1.15)
+			.fromTo(q('[data-rule]'), { scaleX: 0 }, { scaleX: 1, duration: 1, transformOrigin: 'left center' }, 0.4)
 			.fromTo(
 				q('[data-line]'),
 				{ clipPath: 'inset(0% 0% 100% 0%)', y: 14 },
 				{ clipPath: 'inset(0% 0% 0% 0%)', y: 0, duration: 0.8, stagger: 0.07 },
-				0.55
+				0.6
 			);
 
 		return () => {
 			tl.kill();
 			first.textContent = heroWordmark.first;
 			boxed.textContent = heroWordmark.boxed;
-			gsap.set(q('[data-tag], [data-rule], [data-line], [data-art]'), {
+			annos.forEach((el) => (el.textContent = el.dataset.text ?? el.textContent));
+			gsap.set(q('[data-tag], [data-rule], [data-line], [data-dim-line], [data-dim-tick]'), {
 				clearProps: 'clipPath,transform'
 			});
 			gsap.set(boxed, { '--box-r': '0%' });
 		};
 	});
+
+	// Scroll: slight parallax on the wordmark, the divider scales out.
+	$effect(() => {
+		if (motion.reduced) return;
+		const ctx = gsap.context(() => {
+			gsap.to(wrap, {
+				yPercent: -14,
+				ease: 'none',
+				scrollTrigger: { trigger: root, start: 'top top', end: 'bottom top', scrub: true }
+			});
+			gsap.to(root.querySelector('[data-rule-wrap]'), {
+				scaleX: 0,
+				transformOrigin: 'right center',
+				ease: 'none',
+				scrollTrigger: { trigger: root, start: 'center top', end: 'bottom top', scrub: true }
+			});
+		}, root);
+		return () => ctx.revert();
+	});
+
 </script>
 
-<section bind:this={root} class={['hero', played && 'is-played']} aria-labelledby="hero-title">
+<section
+	bind:this={root}
+	id="top"
+	data-section="01"
+	class={['hero', played && 'is-played']}
+	aria-labelledby="hero-title"
+>
 	<div class="flex justify-center">
 		<p class="tag" data-intro data-tag>
-			<span class="tag-mark" aria-hidden="true"></span>{heroTag}
+			<span class="tag-mark" aria-hidden="true"></span><span>{heroTag}</span>
 		</p>
 	</div>
 
+	<div bind:this={wrap} class="wm-wrap">
+		<!-- Spec-drawing annotations -->
+		<div class="annos caps" aria-hidden="true">
+			<span data-intro data-anno>{site.coords}</span>
+			<span class="hidden md:inline" data-intro data-anno>{site.version}</span>
+			<span class="text-right" data-intro><LocalTime seconds /></span>
+		</div>
+		<div class="dim" aria-hidden="true" data-intro>
+			<span class="dim-tick l" data-dim-tick></span>
+			<span class="dim-line" data-dim-line></span>
+			<span class="dim-label caps">W {width}PX</span>
+			<span class="dim-tick r" data-dim-tick></span>
+		</div>
 
-	<!-- One word in the DOM ("NODVIKING"); the box is a pseudo-element so the text isn't duplicated. -->
-	<h1 id="hero-title" class="wordmark font-display" aria-label={site.brand}>
-		<span bind:this={first} class="w1" data-intro aria-hidden="true">{heroWordmark.first}</span><span
-			bind:this={boxed}
-			class="w2"
-			data-intro
-			data-text={heroWordmark.boxed}
-			aria-hidden="true">{heroWordmark.boxed}</span
-		>
-	</h1>
+		<!-- One word in the DOM ("NODVIKING"); the box is a pseudo-element so the text isn't duplicated. -->
+		<h1 bind:this={wordmark} id="hero-title" class="wordmark font-display" aria-label={site.brand}>
+			<span bind:this={first} class="w1" data-intro aria-hidden="true">{heroWordmark.first}</span><span
+				bind:this={boxed}
+				class="w2 boxword"
+				data-intro
+				data-text={heroWordmark.boxed.toUpperCase()}
+				aria-hidden="true">{heroWordmark.boxed}</span
+			>
+		</h1>
+	</div>
 
 	<div class="foot">
-		<span class="rule" data-intro data-rule aria-hidden="true"></span>
-		<div class="max-w-[640px] text-[14px] leading-[1.6] md:text-[14.4px]">
+		<span class="rule-wrap" data-rule-wrap aria-hidden="true"><span class="rule" data-intro data-rule></span></span>
+		<div class="max-w-[640px] text-[14px] leading-[1.6] md:text-[15px]">
 			<p data-intro data-line>{heroIntro[0]}</p>
 			<p class="mt-2 text-mute" data-intro data-line>{heroIntro[1]}</p>
 		</div>
-		<p class="caps self-end text-mute" data-intro data-line>[ Scroll ↓ ]</p>
+		<a href="#about" class="caps self-end text-paper hover:text-accent" data-intro data-line>
+			<span>[ Scroll ↓ ]</span>
+		</a>
 	</div>
 </section>
 
@@ -120,36 +179,101 @@
 		display: flex;
 		flex-direction: column;
 		min-height: 100svh;
-		padding: calc(var(--nav-h) + 16px) var(--gutter) clamp(24px, 4.5vh, 40px);
+		padding: calc(var(--nav-h) + 16px) var(--gutter) clamp(24px, 4vh, 40px);
 	}
 
-	.wordmark {
+	/* Bottom-anchored: the wordmark block sits on the divider; the space above absorbs extra height. */
+	.wm-wrap {
+		container-type: inline-size;
 		margin-top: auto;
-		text-align: center;
+		padding-top: clamp(3rem, 10vh, 8rem);
+	}
+
+	.annos {
+		display: flex;
+		justify-content: space-between;
 		white-space: nowrap;
-		font-size: min(15vw, 22svh, 13.5rem);
+		gap: 1rem;
+		font-size: 10px;
+		font-weight: 600;
+		color: var(--color-mute);
+		margin-bottom: 0.9rem;
+	}
+	@media (max-width: 599px) {
+		.annos {
+			font-size: 9px;
+			letter-spacing: 0.04em;
+		}
+	}
+
+	/* Dimension line spanning the wordmark width, with end ticks and a live W label. */
+	.dim {
+		position: relative;
+		height: 14px;
+		margin-bottom: 0.8rem;
+	}
+	.dim-line {
+		position: absolute;
+		left: 0;
+		right: 0;
+		top: 50%;
+		height: 1px;
+		background: var(--color-line-strong);
+	}
+	.dim-tick {
+		position: absolute;
+		top: 0;
+		width: 1px;
+		height: 100%;
+		background: var(--color-mute);
+	}
+	.dim-tick.l {
+		left: 0;
+	}
+	.dim-tick.r {
+		right: 0;
+	}
+	.dim-label {
+		position: absolute;
+		left: 50%;
+		top: 50%;
+		transform: translate(-50%, -50%);
+		padding: 0 10px;
+		background: var(--color-ink);
+		font-size: 10px;
+		color: var(--color-mute);
+	}
+
+	/* Sized to the full content width: JetBrains Mono advance is 0.6em, tracking -0.06em → 0.54em per glyph. */
+	.wordmark {
+		white-space: nowrap;
 		line-height: 0.9;
 		color: var(--color-accent);
+		/* NOD (1.62em) + gap (0.14em) + VIKING box (3.24em + 0.11em padding) = 5.11em */
+		font-size: calc(100cqw / 5.13);
 	}
 	.w1,
 	.w2 {
 		display: inline-block;
 	}
-	/* VIKING sits in a solid blue box with dark text; the box is drawn by ::after and wiped in via --box-r. */
 	.w2 {
-		--box-r: 0%;
-		position: relative;
 		margin-left: 0.14em;
-		padding: 0 0.06em 0 0.05em;
 	}
-	.w2::after {
-		content: attr(data-text);
-		position: absolute;
-		inset: 0;
-		padding: inherit;
-		background: var(--color-accent);
-		color: var(--color-ink);
-		clip-path: inset(0 var(--box-r) 0 0);
+	/* Phones: stack NOD / VIKING, each sized to the full width. */
+	@container (max-width: 599px) {
+		.wordmark {
+			white-space: normal;
+		}
+		.w1 {
+			display: block;
+			font-size: calc(100cqw / 1.76);
+			line-height: 0.82;
+		}
+		.w2 {
+			margin-left: 0;
+			margin-top: 0.08em;
+			font-size: calc(100cqw / 3.52);
+		}
 	}
 
 	.foot {
@@ -165,12 +289,15 @@
 			align-items: end;
 		}
 	}
+	.rule-wrap,
 	.rule {
 		position: absolute;
 		top: 0;
 		left: 0;
 		right: 0;
 		height: 1px;
+	}
+	.rule {
 		background: var(--color-line);
 	}
 

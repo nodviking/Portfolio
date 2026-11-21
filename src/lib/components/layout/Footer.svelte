@@ -1,38 +1,29 @@
 <script lang="ts">
 	import { magnetic } from '#lib/actions/magnetic.ts';
 	import { scrollToTarget } from '#lib/animations/lenis.ts';
-	import Icon from '#lib/components/ui/Icon.svelte';
 	import LocalTime from '#lib/components/ui/LocalTime.svelte';
 	import { site } from '#lib/data/site.ts';
-	import Socials from './Socials.svelte';
 
 	function toTop() {
 		scrollToTarget(document.getElementById('main') ?? 0);
 	}
 </script>
 
-<footer class="relative px-[var(--gutter)] pt-24 pb-6 md:pt-32 md:pb-8">
-	<p
-		class="text-center font-display text-[17vw] text-accent select-none"
-		aria-hidden="true"
-	>
-		nodviking
-	</p>
-
+<footer class="px-[var(--gutter)] pb-6 md:pb-8">
 	<div
-		class="caps mt-10 grid grid-cols-2 items-center gap-y-4 border-t border-line pt-5 text-mute md:mt-14 md:grid-cols-4"
+		class="caps grid grid-cols-[1fr_auto] items-center gap-x-6 gap-y-3 border-t border-line pt-5 text-[11px] text-mute md:flex md:justify-between"
 	>
 		<p>© {site.copyrightYear} {site.realName}</p>
-		<p class="justify-self-end md:justify-self-center"><LocalTime /></p>
-		<Socials class="md:justify-self-center" />
+		<p class="justify-self-end"><LocalTime /></p>
+		<p>Built with SvelteKit + GSAP</p>
 		<button
 			type="button"
-			class="tag justify-self-end"
+			class="justify-self-end text-paper transition-colors hover:text-accent"
 			onclick={toTop}
-			use:magnetic
+			use:magnetic={{ strength: 0.3 }}
 			aria-label="Back to top"
 		>
-			Top <Icon name="arrow-up" size={12} />
+			<span>[ ↑ Top ]</span>
 		</button>
 	</div>
 </footer>

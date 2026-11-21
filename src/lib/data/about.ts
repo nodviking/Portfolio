@@ -1,7 +1,11 @@
 /**
- * About section: the Developer / Designer specimen cards.
+ * About section: the scroll-lit paragraph and the Developer / Designer specimen cards.
  * Glyph metrics are JetBrains Mono's real values (units per em 1000).
+ * The paragraph is the ONLY place on the page the real name appears.
  */
+
+export const aboutParagraph =
+	'nodviking is Tushar Kumar, a developer and designer from Delhi studying IT at Bhagwan Parshuram Institute of Technology. I started in graphic design (80+ clients, 250+ projects), then started building the products and websites myself.';
 
 export interface SpecimenGlyph {
 	char: string;
@@ -11,7 +15,7 @@ export interface SpecimenGlyph {
 
 export interface SpecimenCard {
 	tab: string;
-	/** Code-style tag. `accent` is the part rendered in blue. */
+	/** Code-style tag. `accent` is the part rendered in orange. */
 	tag: { before: string; accent: string; after: string };
 	title: string;
 	body: string;

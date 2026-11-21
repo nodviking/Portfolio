@@ -188,6 +188,127 @@
 		white-space: nowrap;
 	}
 
+	/* Frame drawing (use:frameDraw): temporary edges + nodes that extend from the corners. */
+	.frame.is-drawing {
+		border-color: transparent;
+	}
+	.frame.is-drawing::before {
+		opacity: 0;
+	}
+	.fd {
+		position: absolute;
+		z-index: 1;
+		pointer-events: none;
+		background: var(--color-line);
+	}
+	.fd-t {
+		top: -1px;
+		left: -1px;
+		right: -1px;
+		height: 1px;
+		transform-origin: left center;
+	}
+	.fd-r {
+		top: -1px;
+		right: -1px;
+		bottom: -1px;
+		width: 1px;
+		transform-origin: center top;
+	}
+	.fd-b {
+		bottom: -1px;
+		left: -1px;
+		right: -1px;
+		height: 1px;
+		transform-origin: right center;
+	}
+	.fd-l {
+		top: -1px;
+		left: -1px;
+		bottom: -1px;
+		width: 1px;
+		transform-origin: center bottom;
+	}
+	.fd-n {
+		width: var(--node);
+		height: var(--node);
+		background: var(--node-c);
+	}
+	.fd-tl {
+		top: calc(var(--node) / -2 - 0.5px);
+		left: calc(var(--node) / -2 - 0.5px);
+	}
+	.fd-tr {
+		top: calc(var(--node) / -2 - 0.5px);
+		right: calc(var(--node) / -2 - 0.5px);
+	}
+	.fd-br {
+		bottom: calc(var(--node) / -2 - 0.5px);
+		right: calc(var(--node) / -2 - 0.5px);
+	}
+	.fd-bl {
+		bottom: calc(var(--node) / -2 - 0.5px);
+		left: calc(var(--node) / -2 - 0.5px);
+	}
+
+	/* Corner nodes step outward 4px on hover (cards). */
+	.frame--lift {
+		transition: transform 0.5s var(--ease-expo);
+	}
+	.frame--lift::before {
+		transition: inset 0.5s var(--ease-expo);
+	}
+	.frame--lift:hover {
+		transform: translateY(-4px);
+	}
+	.frame--lift:hover::before {
+		inset: calc(var(--node) / -2 - 4.5px);
+	}
+
+	/* Second word in a solid orange box with dark text (hero + contact). Box drawn by ::after, wiped via --box-r. */
+	.boxword {
+		--box-r: 0%;
+		position: relative;
+		display: inline-block;
+		padding: 0 0.06em 0 0.05em;
+	}
+	.boxword::after {
+		content: attr(data-text);
+		position: absolute;
+		inset: 0;
+		padding: inherit;
+		background: var(--color-accent);
+		color: var(--color-ink);
+		clip-path: inset(0 var(--box-r) 0 0);
+	}
+
+	/* Standard section spacing */
+	.section {
+		position: relative;
+		padding: clamp(5rem, 12vw, 10rem) var(--gutter);
+	}
+
+	/* Small outlined tag chip (stack tags, project tech) */
+	.chip {
+		display: inline-block;
+		padding: 3px 8px;
+		border: 1px solid var(--color-line-strong);
+		font-size: 11px;
+		font-weight: 600;
+		letter-spacing: 0.04em;
+		text-transform: uppercase;
+		color: var(--color-paper);
+		transition:
+			background-color 0.2s,
+			color 0.2s,
+			border-color 0.2s;
+	}
+	.chip.is-hl {
+		background: var(--color-accent);
+		border-color: var(--color-accent);
+		color: var(--color-on-accent);
+	}
+
 	/* [01]-style section index */
 	.index-tag {
 		font-size: 12px;

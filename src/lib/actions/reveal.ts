@@ -9,6 +9,8 @@ export interface RevealOptions {
 	from?: 'bottom' | 'left' | 'top';
 	/** Vertical travel in px. */
 	y?: number;
+	/** Set false to only translate (e.g. framed cards whose corner nodes would be clipped). */
+	clip?: boolean;
 }
 
 const clipFrom = {
@@ -24,10 +26,11 @@ const clipFrom = {
 export const reveal: Action<HTMLElement, RevealOptions | undefined> = (node, opts) => {
 	if (motion.reduced) return {};
 	const from = opts?.from ?? 'bottom';
-	gsap.set(node, { clipPath: clipFrom[from], y: opts?.y ?? 28 });
+	const clip = opts?.clip ?? true;
+	gsap.set(node, clip ? { clipPath: clipFrom[from], y: opts?.y ?? 28 } : { y: opts?.y ?? 28 });
 
 	const tween = gsap.to(node, {
-		clipPath: 'inset(0% 0% 0% 0%)',
+		...(clip ? { clipPath: 'inset(0% 0% 0% 0%)' } : {}),
 		y: 0,
 		duration: 1.1,
 		ease: EASE.out,

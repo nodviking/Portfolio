@@ -1,61 +1,65 @@
 <script lang="ts">
-	import { EASE, gsap } from '#lib/animations/gsap.ts';
+	import { gsap } from '#lib/animations/gsap.ts';
 	import { navigateTo } from '#lib/animations/navigate.ts';
+	import { cover, reveal } from '#lib/animations/pixelwipe.ts';
+	import { cipherOf, scrambleTo } from '#lib/animations/scramble.ts';
 	import LocalTime from '#lib/components/ui/LocalTime.svelte';
 	import Icon from '#lib/components/ui/Icon.svelte';
-	import { navLinks, site } from '#lib/data/site.ts';
-	import { magnetic } from '#lib/actions/magnetic.ts';
+	import { navLinks, sections, site } from '#lib/data/site.ts';
 	import { motion } from '#lib/stores/motion.svelte.ts';
 	import Socials from './Socials.svelte';
 
+	/** Fullscreen menu. Opens/closes behind a pixel-grid wipe; the links scramble in. */
 	let { onclose }: { onclose: (refocus?: boolean) => void } = $props();
 
 	let root: HTMLDivElement;
-	let tl: gsap.core.Timeline | null = null;
+	let shown = $state(false);
+	let busy = false;
 
-	// Build the open/close timeline once; play/reverse it when the menu state flips.
-	$effect(() => {
-		const lines = root.querySelectorAll('[data-menu-line]');
-		const fades = root.querySelectorAll('[data-menu-fade]');
+	const indexFor = (href: string) => sections.find((s) => href.endsWith(`#${s.id}`))?.index ?? '';
+
+	async function open() {
+		if (busy) return;
+		busy = true;
+		motion.lenis?.stop();
+		if (!motion.reduced) await cover();
+		shown = true;
+		gsap.set(root, { autoAlpha: 1 });
+		const labels = Array.from(root.querySelectorAll<HTMLElement>('[data-menu-label]'));
+		if (!motion.reduced) {
+			labels.forEach((el) => (el.textContent = cipherOf(el.dataset.text!)));
+			reveal();
+			labels.forEach((el, i) => scrambleTo(el, el.dataset.text, 0.6, 0.15 + i * 0.05));
+		}
+		requestAnimationFrame(() =>
+			root.querySelector<HTMLElement>('[data-menu-link]')?.focus({ preventScroll: true })
+		);
+		busy = false;
+	}
+
+	async function close() {
+		if (busy) return;
+		busy = true;
+		if (!motion.reduced) await cover();
+		shown = false;
 		gsap.set(root, { autoAlpha: 0 });
+		root.querySelectorAll<HTMLElement>('[data-menu-label]').forEach((el) => {
+			gsap.killTweensOf(el);
+			el.textContent = el.dataset.text!;
+		});
+		if (!motion.reduced) reveal();
+		motion.lenis?.start();
+		busy = false;
+	}
 
-		tl = gsap
-			.timeline({ paused: true })
-			.set(root, { autoAlpha: 1 })
-			.fromTo(
-				root,
-				{ clipPath: 'inset(0% 0% 100% 0%)' },
-				{ clipPath: 'inset(0% 0% 0% 0%)', duration: 0.9, ease: EASE.inOut }
-			)
-			.fromTo(
-				lines,
-				{ yPercent: 115 },
-				{ yPercent: 0, duration: 1.1, ease: EASE.out, stagger: 0.06 },
-				'-=0.35'
-			)
-			.fromTo(fades, { autoAlpha: 0 }, { autoAlpha: 1, duration: 0.8, ease: 'power2.out' }, '<0.25');
-
-		return () => {
-			tl?.kill();
-			tl = null;
-		};
+	$effect(() => {
+		gsap.set(root, { autoAlpha: 0 });
 	});
 
 	$effect(() => {
-		const open = motion.menuOpen;
-		if (!tl) return;
-		if (open) {
-			motion.lenis?.stop();
-			if (motion.reduced) tl.progress(1);
-			else tl.timeScale(1).play();
-			requestAnimationFrame(() =>
-				root.querySelector<HTMLElement>('[data-menu-line]')?.focus({ preventScroll: true })
-			);
-		} else {
-			if (motion.reduced) tl.progress(0);
-			else tl.timeScale(1.7).reverse();
-			motion.lenis?.start();
-		}
+		const want = motion.menuOpen;
+		if (want && !shown) open();
+		else if (!want && shown) close();
 	});
 
 	function onKeydown(e: KeyboardEvent) {
@@ -85,9 +89,7 @@
 		if (e.metaKey || e.ctrlKey || e.shiftKey) return;
 		e.preventDefault();
 		onclose(false);
-		motion.lenis?.start();
-		// Let the curtain start lifting before we move.
-		setTimeout(() => navigateTo(href), motion.reduced ? 0 : 250);
+		setTimeout(() => navigateTo(href), motion.reduced ? 0 : 650);
 	}
 </script>
 
@@ -105,24 +107,25 @@
 >
 	<div class="flex h-[var(--nav-h)] items-center justify-between px-[var(--gutter)]">
 		<span class="caps text-mute">/* menu */</span>
-		<button type="button" class="tag" onclick={() => onclose()} use:magnetic>Close ✕</button>
+		<button type="button" class="tag" onclick={() => onclose()}><span>Close</span></button>
 	</div>
 
-	<nav aria-label="Primary" class="flex flex-1 items-center justify-center">
-		<ol class="flex flex-col items-center gap-1 md:gap-2">
-			{#each navLinks as link, i (link.href)}
-				<li class="overflow-hidden pb-[0.08em]">
+	<nav aria-label="Primary" class="flex flex-1 items-center px-[var(--gutter)]">
+		<ol class="flex w-full flex-col">
+			{#each navLinks as link (link.href)}
+				<li class="border-b border-line first:border-t">
 					<a
 						href={link.href}
-						data-menu-line
-						class="group flex items-baseline gap-3 md:gap-5"
+						data-menu-link
+						data-no-scramble
+						class="group flex items-baseline gap-4 py-2 md:gap-6"
 						onclick={(e) => go(e, link.href)}
 					>
-						<span class="index-tag tabular-nums" aria-hidden="true"
-							>{String(i + 1).padStart(2, '0')}</span
-						>
+						<span class="index-tag w-8 tabular-nums" aria-hidden="true">{indexFor(link.href)}</span>
 						<span
-							class="font-display text-[clamp(2.6rem,9vw,6.5rem)] text-paper transition-colors duration-300 group-hover:text-accent group-focus-visible:text-accent"
+							data-menu-label
+							data-text={link.label}
+							class="font-display text-[clamp(2rem,7vw,5rem)] text-paper transition-colors duration-200 group-hover:text-accent group-focus-visible:text-accent"
 							>{link.label}</span
 						>
 					</a>
@@ -131,23 +134,17 @@
 		</ol>
 	</nav>
 
-	<div
-		data-menu-fade
-		class="mx-[var(--gutter)] grid gap-6 border-t border-line pt-5 pb-6 md:grid-cols-3 md:items-end md:pb-8"
-	>
+	<div class="mx-[var(--gutter)] grid gap-5 border-t border-line pt-5 pb-6 md:grid-cols-3 md:items-end md:pb-8">
 		<div class="caps flex flex-col gap-1 text-mute">
-			<a class="w-fit hover:text-paper" href="mailto:{site.email}">{site.email}</a>
+			<a class="w-fit hover:text-accent" href="mailto:{site.email}"><span>{site.email}</span></a>
 			<a
-				class="inline-flex w-fit items-center gap-1 hover:text-paper"
+				class="inline-flex w-fit items-center gap-1 hover:text-accent"
 				href={site.designPortfolio}
 				target="_blank"
-				rel="noopener noreferrer"
-				>Design portfolio <Icon name="arrow-up-right" size={12} /></a
+				rel="noopener noreferrer"><span>Design portfolio</span> <Icon name="arrow-up-right" size={12} /></a
 			>
 		</div>
-		<p class="caps flex items-center gap-3 text-mute md:justify-center">
-			{#if site.available}<span class="tag-mark" aria-hidden="true"></span>{site.availability}{/if}
-		</p>
+		<p class="caps text-mute md:text-center">{site.location}</p>
 		<div class="caps flex items-center justify-between gap-4 text-mute md:justify-end">
 			<LocalTime />
 			<Socials />

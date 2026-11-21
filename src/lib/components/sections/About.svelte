@@ -1,16 +1,20 @@
 <script lang="ts">
-	import { reveal } from '#lib/actions/reveal.ts';
+	import { wordScrub } from '#lib/actions/wordScrub.ts';
+	import SectionHead from '#lib/components/ui/SectionHead.svelte';
 	import SpecimenCard from '#lib/components/ui/SpecimenCard.svelte';
-	import { specimenCards } from '#lib/data/about.ts';
-
-	// Phase 3 adds the scroll-lit manifesto paragraph above these cards.
+	import { aboutParagraph, specimenCards } from '#lib/data/about.ts';
 </script>
 
-<section id="about" class="px-[var(--gutter)] py-[clamp(5rem,12vw,10rem)]" aria-labelledby="about-title">
-	<div class="mb-[clamp(2.5rem,6vw,5rem)] flex items-start gap-4 md:gap-6" use:reveal>
-		<span class="index-tag pt-2">[01]</span>
-		<h2 id="about-title" class="font-display text-[clamp(3rem,10vw,9rem)] text-paper">About</h2>
-	</div>
+<section id="about" data-section="02" class="section" aria-labelledby="about-title">
+	<SectionHead id="about" title="About" titleId="about-title" />
+
+	<!-- The only place the real name appears on the page. Words go grey → white as you scroll. -->
+	<p
+		class="mb-[clamp(4rem,9vw,8rem)] max-w-[34ch] text-[clamp(1.35rem,3.2vw,2.7rem)] leading-[1.3] font-medium tracking-[-0.02em] text-paper"
+		use:wordScrub
+	>
+		{aboutParagraph}
+	</p>
 
 	<div class="grid items-center gap-y-6 md:grid-cols-[1fr_auto_1fr] md:gap-x-[clamp(1.5rem,3vw,3.5rem)]">
 		<SpecimenCard card={specimenCards[0]} />
@@ -18,6 +22,6 @@
 			class="justify-self-center font-display text-[clamp(3rem,5vw,4.5rem)] leading-none text-accent"
 			aria-hidden="true">+</span
 		>
-		<SpecimenCard card={specimenCards[1]} delay={0.12} />
+		<SpecimenCard card={specimenCards[1]} delay={0.15} />
 	</div>
 </section>
