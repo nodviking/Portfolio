@@ -3,7 +3,7 @@
 	import { motion } from '#lib/stores/motion.svelte.ts';
 
 	/**
-	 * Dot + lagging ring, mix-blend-mode: difference.
+	 * Dot + lagging ring in flat brand colours (no blend mode: difference would turn the blue orange).
 	 * - grows over links/buttons
 	 * - shows a label over any element with data-cursor="View" (or any text)
 	 * Only mounted on fine pointers; follows instantly (no lag) under reduced motion.
@@ -67,7 +67,7 @@
 
 {#if motion.finePointer}
 	<div
-		class="pointer-events-none fixed inset-0 z-[100] mix-blend-difference transition-opacity duration-300"
+		class="pointer-events-none fixed inset-0 z-[100] transition-opacity duration-300"
 		class:opacity-0={!visible}
 		aria-hidden="true"
 	>
@@ -106,7 +106,7 @@
 	.dot {
 		width: 6px;
 		height: 6px;
-		background: #fff;
+		background: var(--color-accent-soft);
 	}
 	.dot.shrink {
 		opacity: 0;
@@ -114,25 +114,27 @@
 	.ring {
 		width: 34px;
 		height: 34px;
-		border: 1px solid #fff;
+		border: 1px solid rgb(237 237 240 / 0.55);
 		display: grid;
 		place-items: center;
 	}
-	/* Outline only: a white fill under difference-blend would turn sky-blue into orange. */
 	.ring.hover {
 		width: 64px;
 		height: 64px;
+		border-color: var(--color-accent-soft);
+		box-shadow: 0 0 10px rgb(47 107 255 / 0.25);
 	}
 	.ring.label {
 		width: 92px;
 		height: 92px;
-		background: #fff;
+		border-color: var(--color-accent);
+		background: var(--color-accent);
 	}
 	.ring.pressed {
 		scale: 0.85;
 	}
 	.ring span {
-		color: #000;
+		color: #fff;
 		font-size: 11px;
 		letter-spacing: 0.06em;
 		text-transform: uppercase;

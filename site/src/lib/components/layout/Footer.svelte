@@ -13,7 +13,7 @@
 
 <footer class="relative px-[var(--gutter)] pt-24 pb-6 md:pt-32 md:pb-8">
 	<p
-		class="glow-text text-center font-display text-[clamp(4.5rem,23vw,24rem)] leading-[0.85] uppercase select-none"
+		class="text-accent text-center font-display text-[clamp(4.5rem,23vw,24rem)] leading-[0.85] uppercase select-none"
 		aria-hidden="true"
 	>
 		nodviking

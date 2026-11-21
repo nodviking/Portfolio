@@ -55,7 +55,7 @@
 	<title>{site.title}</title>
 	<meta name="description" content={site.description} />
 	<meta name="author" content={site.realName} />
-	<meta name="theme-color" content="#000000" />
+	<meta name="theme-color" content="#050507" />
 	<link rel="icon" href="/favicon.svg" type="image/svg+xml" />
 	<link
 		rel="preload"

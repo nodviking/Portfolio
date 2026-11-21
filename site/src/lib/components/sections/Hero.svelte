@@ -9,7 +9,7 @@
 	/**
 	 * "Decrypt" hero.
 	 * - gl:     WebGL particles decrypt NODVIKING, scatter from the pointer, and re-form into the About headline on scroll.
-	 * - static: glow wordmark + headline in normal flow (reduced motion, no WebGL2, Save-Data).
+	 * - static: flat wordmark with a soft glow + headline in normal flow (reduced motion, no WebGL2, Save-Data).
 	 * The real <h1>/<h2> are always in the DOM; in gl mode their text is transparent but still readable/selectable.
 	 */
 	let section: HTMLElement;
@@ -241,7 +241,7 @@
 			<span class="flex flex-col items-end gap-1 justify-self-end text-right">
 				{#if site.available}
 					<span class="flex items-center gap-2">
-						<span class="size-1.5 rounded-full bg-sky shadow-[0_0_8px_var(--color-sky)]" aria-hidden="true"
+						<span class="size-1.5 rounded-full bg-accent" aria-hidden="true"
 						></span>{site.availability}
 					</span>
 				{/if}
@@ -282,11 +282,11 @@
 		pointer-events: none;
 	}
 
-	/* Wordmark: glow text until the particles take over. */
+	/* Wordmark: the only glowing element on the site. Soft, small. */
 	.hero-title {
 		position: relative;
-		color: var(--color-sky);
-		text-shadow: var(--glow-lg);
+		color: var(--color-accent);
+		text-shadow: var(--glow-hero);
 	}
 	.is-gl .hero-title {
 		color: transparent;
@@ -306,10 +306,7 @@
 	}
 	.about-title {
 		--reveal: 0;
-		color: rgb(56 189 248 / var(--reveal));
-		text-shadow:
-			0 0 12px rgb(56 189 248 / calc(var(--reveal) * 0.6)),
-			0 0 48px rgb(56 189 248 / calc(var(--reveal) * 0.3));
+		color: rgb(47 107 255 / var(--reveal));
 	}
 
 	/* Static mode (reduced motion / no WebGL): everything in normal flow. */
@@ -369,8 +366,7 @@
 		font-size: 12px;
 		line-height: 2;
 		white-space: nowrap;
-		color: rgb(56 189 248 / 0.75);
-		text-shadow: 0 0 6px rgb(56 189 248 / 0.5);
+		color: rgb(91 140 255 / 0.72);
 		pointer-events: none;
 		user-select: none;
 		-webkit-mask-image: radial-gradient(
@@ -387,8 +383,8 @@
 		width: 0;
 		height: 0;
 		border-radius: 999px;
-		border: 1px solid rgb(56 189 248 / 0.35);
-		box-shadow: 0 0 24px rgb(56 189 248 / 0.15) inset;
+		border: 1px solid rgb(91 140 255 / 0.4);
+		box-shadow: 0 0 10px rgb(47 107 255 / 0.18);
 		pointer-events: none;
 	}
 
@@ -400,7 +396,7 @@
 	.cue-line {
 		width: 1px;
 		height: 42px;
-		background: linear-gradient(to bottom, var(--color-sky), transparent);
+		background: linear-gradient(to bottom, var(--color-accent-soft), transparent);
 		transform-origin: top;
 		animation: cue 2.2s var(--ease-quart-in-out) infinite;
 	}

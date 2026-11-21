@@ -86,7 +86,7 @@
 				data-word
 				class={[
 					'absolute font-display text-[clamp(3.2rem,12vw,10rem)] leading-none uppercase',
-					i === introWords.length - 1 ? 'intro-glow text-sky' : 'text-paper'
+					i === introWords.length - 1 ? 'text-accent' : 'text-paper'
 				]}
 			>
 				{#each Array.from(word) as ch, j (j)}<span class="inline-block overflow-hidden pb-[0.04em] align-bottom"
@@ -99,7 +99,7 @@
 			{site.role}
 		</p>
 		<p
-			class="caps glow-text-sm absolute right-[var(--gutter)] bottom-5 tabular-nums md:bottom-7"
+			class="caps text-accent-soft absolute right-[var(--gutter)] bottom-5 tabular-nums md:bottom-7"
 		>
 			{String(count).padStart(3, '0')}
 		</p>
@@ -107,10 +107,6 @@
 {/if}
 
 <style>
-	/* Filter glow (not text-shadow) so hidden, masked letters don't bleed a halo into view. */
-	.intro-glow {
-		filter: drop-shadow(0 0 10px rgb(56 189 248 / 0.6)) drop-shadow(0 0 36px rgb(56 189 248 / 0.35));
-	}
 	:global(html[data-intro='skip']) .preloader {
 		display: none;
 	}

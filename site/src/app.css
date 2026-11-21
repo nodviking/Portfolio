@@ -2,16 +2,17 @@
 
 /* ---------- Design tokens (exposed as CSS vars + Tailwind utilities) ---------- */
 @theme {
-	--color-ink: #000000;
-	--color-paper: #f2f4f6;
-	--color-mute: #8a9099;
-	--color-line: rgb(242 244 246 / 0.24);
-	/* The one accent: electric sky-blue */
-	--color-sky: #38bdf8;
-	--color-sky-deep: #0284c7;
+	--color-ink: #050507;
+	--color-paper: #ededf0;
+	--color-mute: #8a8f98;
+	--color-line: rgb(237 237 240 / 0.16);
+	/* The one accent: electric blue. -soft is the AA-safe tint for small text, links and hover
+	   (#2F6BFF = 4.53:1, #5B8CFF = 6.44:1 on #050507). */
+	--color-accent: #2f6bff;
+	--color-accent-soft: #5b8cff;
 	/* Cool frosted glass */
-	--color-glass: rgb(16 28 40 / 0.5);
-	--color-glass-edge: rgb(186 230 253 / 0.14);
+	--color-glass: rgb(12 16 32 / 0.55);
+	--color-glass-edge: rgb(91 140 255 / 0.14);
 
 	--font-display: 'Anton', 'Anton Fallback', Impact, 'Arial Narrow', sans-serif;
 	--font-sans: 'Inter Tight Variable', 'Helvetica Neue', Helvetica, Arial, sans-serif;
@@ -34,9 +35,8 @@
 :root {
 	--gutter: clamp(16px, 2.4vw, 32px);
 	--nav-h: 72px;
-	--glow-sm: 0 0 8px rgb(56 189 248 / 0.55), 0 0 24px rgb(56 189 248 / 0.25);
-	--glow-lg: 0 0 12px rgb(56 189 248 / 0.6), 0 0 48px rgb(56 189 248 / 0.35),
-		0 0 120px rgb(56 189 248 / 0.18);
+	/* Glow is reserved for the hero wordmark (and small hover/lens accents). Keep it soft. */
+	--glow-hero: 0 0 6px rgb(47 107 255 / 0.32), 0 0 22px rgb(47 107 255 / 0.16);
 }
 
 /* ---------- Base ---------- */
@@ -106,7 +106,7 @@
 		gap: 0.5rem;
 		height: 2.25rem;
 		padding-inline: 1.25rem;
-		border: 1px solid rgb(242 244 246 / 0.7);
+		border: 1px solid rgb(237 237 240 / 0.6);
 		border-radius: 999px;
 		font-size: 11px;
 		letter-spacing: 0.06em;
@@ -121,22 +121,9 @@
 	}
 	.pill:hover,
 	.pill:focus-visible {
-		border-color: var(--color-sky);
-		color: var(--color-sky);
-		box-shadow:
-			0 0 14px rgb(56 189 248 / 0.45),
-			inset 0 0 10px rgb(56 189 248 / 0.15);
-		text-shadow: 0 0 8px rgb(56 189 248 / 0.6);
-	}
-
-	/* Neon sky-blue text */
-	.glow-text {
-		color: var(--color-sky);
-		text-shadow: var(--glow-lg);
-	}
-	.glow-text-sm {
-		color: var(--color-sky);
-		text-shadow: var(--glow-sm);
+		border-color: var(--color-accent-soft);
+		color: var(--color-accent-soft);
+		box-shadow: 0 0 10px rgb(47 107 255 / 0.28);
 	}
 
 	/* Cool frosted-glass panel */
@@ -157,13 +144,6 @@
 	}
 	.skip-link:focus-visible {
 		transform: none;
-	}
-}
-
-@media (forced-colors: active) {
-	.glow-text,
-	.glow-text-sm {
-		text-shadow: none;
 	}
 }
 

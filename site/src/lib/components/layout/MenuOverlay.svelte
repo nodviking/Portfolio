@@ -121,7 +121,7 @@
 							>{String(i + 1).padStart(2, '0')}</span
 						>
 						<span
-							class="font-display text-[clamp(3.4rem,12vw,8.5rem)] leading-[0.92] text-paper uppercase transition-[color,text-shadow] duration-500 ease-[var(--ease-expo)] group-hover:text-sky group-hover:[text-shadow:var(--glow-lg)] group-focus-visible:text-sky"
+							class="font-display text-[clamp(3.4rem,12vw,8.5rem)] leading-[0.92] text-paper uppercase transition-colors duration-500 ease-[var(--ease-expo)] group-hover:text-accent group-focus-visible:text-accent"
 							>{link.label}</span
 						>
 					</a>
@@ -145,7 +145,7 @@
 			>
 		</div>
 		<p class="caps flex items-center gap-2 text-paper/80 md:justify-center">
-			{#if site.available}<span class="size-1.5 rounded-full bg-sky shadow-[0_0_8px_var(--color-sky)]" aria-hidden="true"
+			{#if site.available}<span class="size-1.5 rounded-full bg-accent" aria-hidden="true"
 				></span>{site.availability}{/if}
 		</p>
 		<div class="caps flex items-center justify-between gap-4 text-paper/80 md:justify-end">

@@ -41,7 +41,8 @@ export interface DecryptField {
 }
 
 const CIPHER = 'ABCDEFGHJKLMNPQRSTUVWXYZ0123456789#$%&@?<>/';
-const SKY: [number, number, number] = [0.22, 0.741, 0.973];
+// #2F6BFF in linear-ish 0..1 sRGB
+const ACCENT: [number, number, number] = [0.184, 0.42, 1.0];
 
 /* ------------------------------------------------------------------ text sampling */
 
@@ -175,7 +176,7 @@ void main() {
 	vec2 c = a_dyn.xy / u_res * 2.0 - 1.0;
 	gl_Position = vec4(c.x, -c.y, 0.0, 1.0);
 	float s = u_size * mix(0.7, 1.15, a_seed);
-	gl_PointSize = u_glow > 0.5 ? s * 3.4 : s;
+	gl_PointSize = u_glow > 0.5 ? s * 2.4 : s;
 	v_hot = a_dyn.z;
 	v_seed = a_seed;
 }`;
@@ -191,10 +192,10 @@ uniform vec3 u_color;
 out vec4 o;
 void main() {
 	float d = length(gl_PointCoord - 0.5);
-	vec3 hotc = vec3(0.78, 0.94, 1.0);
+	vec3 hotc = vec3(0.7, 0.8, 1.0);
 	vec3 col = mix(u_color, hotc, v_hot * 0.65);
 	float flick = 0.55 + 0.45 * sin(u_time * 9.0 + v_seed * 60.0);
-	float a = u_glow > 0.5 ? exp(-d * d * 16.0) * 0.11 : smoothstep(0.5, 0.15, d);
+	float a = u_glow > 0.5 ? exp(-d * d * 18.0) * 0.045 : smoothstep(0.5, 0.15, d);
 	a *= u_alpha * mix(0.92, flick, v_hot);
 	o = vec4(col * a, a);
 }`;
@@ -263,7 +264,7 @@ export async function createDecryptField(opts: DecryptFieldOptions): Promise<Dec
 	const dynBuf = gl.createBuffer()!;
 	const seedBuf = gl.createBuffer()!;
 	gl.bindVertexArray(vao);
-	gl.uniform3fv(loc.color, SKY);
+	gl.uniform3fv(loc.color, ACCENT);
 	gl.enable(gl.BLEND);
 	gl.blendFunc(gl.ONE, gl.ONE);
 	gl.clearColor(0, 0, 0, 0);
@@ -518,7 +519,7 @@ export async function createDecryptField(opts: DecryptFieldOptions): Promise<Dec
 			dyn[i * 3] = pos[ix];
 			dyn[i * 3 + 1] = pos[iy];
 		}
-		// Per-slot heat: cipher glyphs glow white-hot, locked letters cool to sky-blue.
+		// Per-slot heat: cipher glyphs glow white-hot, locked letters cool to the accent blue.
 		for (const s of slots) {
 			const v = s.locked ? 0 : 1;
 			for (let j = 0; j < s.count; j++) {

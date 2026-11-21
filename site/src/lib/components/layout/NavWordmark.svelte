@@ -29,7 +29,7 @@
 
 <span
 	bind:this={el}
-	class="glow-text-sm font-display text-[20px] leading-none tracking-[0.06em] uppercase md:text-[22px]"
+	class="text-accent font-display text-[20px] leading-none tracking-[0.06em] uppercase md:text-[22px]"
 	aria-hidden="true"
 	onpointerenter={() => decode(1)}>{site.brand}</span
 >
